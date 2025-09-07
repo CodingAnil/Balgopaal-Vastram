@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply rounded-lg bg-peacock-600 px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply rounded-lg bg-copper-600 px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-copper-700 focus:outline-none focus:ring-2 focus:ring-copper-500 focus:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply rounded-lg border-2 border-peacock-600 px-4 py-2 font-medium text-peacock-600 transition-colors duration-200 hover:bg-peacock-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2;
+  }
+
+  .card {
+    @apply rounded-lg bg-white shadow-md transition-shadow duration-200 hover:shadow-lg;
+  }
+
+  .input-field {
+    @apply w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500;
+  }
+
+  .gradient-peacock {
+    @apply bg-gradient-to-r from-peacock-500 to-peacock-700;
+  }
+
+  .gradient-copper {
+    @apply bg-gradient-to-r from-copper-500 to-copper-700;
+  }
+
+  .gradient-peacock-copper {
+    @apply bg-gradient-to-r from-peacock-500 via-peacock-600 to-copper-600;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
