@@ -11,8 +11,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  // Add this to handle the lockfile warning
-  outputFileTracingRoot: __dirname,
 }
 
 module.exports = nextConfig
