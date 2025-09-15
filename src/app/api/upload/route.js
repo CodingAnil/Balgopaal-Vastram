@@ -1,12 +1,22 @@
 import { NextResponse } from 'next/server'
 import { v2 as cloudinary } from 'cloudinary'
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+// Configure Cloudinary - moved inside function to handle missing env vars
+function configureCloudinary() {
+  if (
+    !process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
+    !process.env.CLOUDINARY_API_KEY ||
+    !process.env.CLOUDINARY_API_SECRET
+  ) {
+    throw new Error('Missing Cloudinary configuration')
+  }
+
+  cloudinary.config({
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  })
+}
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
@@ -14,15 +24,23 @@ const MAX_FILES = 5
 
 export async function POST(request) {
   try {
+    // Configure Cloudinary with error handling
+    try {
+      configureCloudinary()
+    } catch (configError) {
+      console.error('Cloudinary configuration error:', configError)
+      return NextResponse.json(
+        { error: 'Image upload service configuration error' },
+        { status: 500 }
+      )
+    }
+
     const formData = await request.formData()
     // Get all files from form data
     const files = formData.getAll('images')
-    
+
     if (!files || files.length === 0) {
-      return NextResponse.json(
-        { error: 'No files provided' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'No files provided' }, { status: 400 })
     }
 
     if (files.length > MAX_FILES) {
@@ -39,7 +57,9 @@ export async function POST(request) {
       // Validate file type
       if (!ALLOWED_TYPES.includes(file.type)) {
         return NextResponse.json(
-          { error: `Invalid file type: ${file.type}. Allowed types: ${ALLOWED_TYPES.join(', ')}` },
+          {
+            error: `Invalid file type: ${file.type}. Allowed types: ${ALLOWED_TYPES.join(', ')}`,
+          },
           { status: 400 }
         )
       }
@@ -47,7 +67,9 @@ export async function POST(request) {
       // Validate file size
       if (file.size > MAX_FILE_SIZE) {
         return NextResponse.json(
-          { error: `File size too large: ${(file.size / 1024 / 1024).toFixed(2)}MB. Maximum allowed: 5MB` },
+          {
+            error: `File size too large: ${(file.size / 1024 / 1024).toFixed(2)}MB. Maximum allowed: 5MB`,
+          },
           { status: 400 }
         )
       }
@@ -58,22 +80,24 @@ export async function POST(request) {
 
       // Create upload promise
       const uploadPromise = new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream(
-          {
-            folder: 'products',
-            resource_type: 'image',
-            quality: 'auto',
-            fetch_format: 'auto',
-          },
-          (error, result) => {
-            if (error) {
-              console.error('Cloudinary upload error:', error)
-              reject(error)
-            } else {
-              resolve(result.secure_url)
+        cloudinary.uploader
+          .upload_stream(
+            {
+              folder: 'products',
+              resource_type: 'image',
+              quality: 'auto',
+              fetch_format: 'auto',
+            },
+            (error, result) => {
+              if (error) {
+                console.error('Cloudinary upload error:', error)
+                reject(error)
+              } else {
+                resolve(result.secure_url)
+              }
             }
-          }
-        ).end(buffer)
+          )
+          .end(buffer)
       })
 
       uploadPromises.push(uploadPromise)
@@ -94,15 +118,14 @@ export async function POST(request) {
     return NextResponse.json({
       success: true,
       message: `Successfully uploaded ${uploadedUrls.length} image(s)`,
-      urls: uploadedUrls
+      urls: uploadedUrls,
     })
-
   } catch (error) {
     console.error('Upload API error:', error)
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to upload images',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

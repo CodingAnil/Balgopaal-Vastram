@@ -4,7 +4,17 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request) {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await request.json()
+    // Check for required environment variables
+    if (!process.env.RAZORPAY_KEY_SECRET) {
+      console.error('Missing Razorpay secret key')
+      return NextResponse.json(
+        { error: 'Payment service configuration error' },
+        { status: 500 }
+      )
+    }
+
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+      await request.json()
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return NextResponse.json(
@@ -24,9 +34,9 @@ export async function POST(request) {
 
     if (!isAuthentic) {
       return NextResponse.json(
-        { 
+        {
           success: false,
-          error: 'Payment verification failed - Invalid signature' 
+          error: 'Payment verification failed - Invalid signature',
         },
         { status: 400 }
       )
@@ -56,10 +66,10 @@ export async function POST(request) {
   } catch (error) {
     console.error('Razorpay payment verification error:', error)
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Payment verification failed',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

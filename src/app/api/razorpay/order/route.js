@@ -3,6 +3,15 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request) {
   try {
+    // Check for required environment variables
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      console.error('Missing Razorpay credentials')
+      return NextResponse.json(
+        { error: 'Payment service configuration error' },
+        { status: 500 }
+      )
+    }
+
     // Initialize Razorpay inside the function to avoid build-time issues
     const razorpay = new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID,
@@ -12,10 +21,7 @@ export async function POST(request) {
     const { amount, currency = 'INR', receipt } = await request.json()
 
     if (!amount || amount <= 0) {
-      return NextResponse.json(
-        { error: 'Invalid amount' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid amount' }, { status: 400 })
     }
 
     // Convert amount to paise (Razorpay expects amount in smallest currency unit)
@@ -42,9 +48,9 @@ export async function POST(request) {
   } catch (error) {
     console.error('Razorpay order creation error:', error)
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to create order',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

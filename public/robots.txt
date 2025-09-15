@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /checkout
+Disallow: /orders
+
+# Host
+Host: https://balgopaal-vastram.vercel.app
+
+# Sitemaps
+Sitemap: https://balgopaal-vastram.vercel.app/sitemap.xml

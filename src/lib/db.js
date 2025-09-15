@@ -16,20 +16,28 @@ async function connectDB() {
 
   if (!MONGODB_URI) {
     throw new Error(
-      'Please define the MONGODB_URI environment variable inside .env.local'
+      'Please define the MONGODB_URI environment variable in your deployment settings'
     )
   }
 
   if (cached.conn) {
-    return cached.conn
+    // Check if connection is still valid
+    if (mongoose.connection.readyState === 1) {
+      return cached.conn
+    }
   }
 
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      family: 4, // Use IPv4, skip trying IPv6
     }
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      console.log('✅ Connected to MongoDB')
       return mongoose
     })
   }
@@ -38,7 +46,8 @@ async function connectDB() {
     cached.conn = await cached.promise
   } catch (e) {
     cached.promise = null
-    throw e
+    console.error('❌ MongoDB connection error:', e)
+    throw new Error(`Database connection failed: ${e.message}`)
   }
 
   return cached.conn
