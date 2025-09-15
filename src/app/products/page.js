@@ -25,7 +25,7 @@ function ProductsContent() {
   const [availableFilters, setAvailableFilters] = useState({
     categories: [],
     colors: [],
-    sizes: []
+    sizes: [],
   })
 
   // Initialize filters from URL params
@@ -47,7 +47,7 @@ function ProductsContent() {
       const params = new URLSearchParams({
         page: currentPage.toString(),
         limit: '12',
-        sort: sortBy
+        sort: sortBy,
       })
 
       // Add filters
@@ -106,9 +106,9 @@ function ProductsContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const activeFiltersCount = Object.values(filters).filter(
-    (value) => value !== ''
-  ).length + (searchQuery ? 1 : 0)
+  const activeFiltersCount =
+    Object.values(filters).filter((value) => value !== '').length +
+    (searchQuery ? 1 : 0)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -255,18 +255,18 @@ function ProductsContent() {
                 {/* Results Count */}
                 <div className="flex items-center space-x-4">
                   {loading ? (
-                    <div className="h-4 w-32 bg-gray-200 animate-pulse rounded"></div>
+                    <div className="h-4 w-32 animate-pulse rounded bg-gray-200"></div>
                   ) : (
                     <>
                       <p className="text-gray-600">
-                        {pagination ? 
-                          `Showing ${products.length} of ${pagination.totalProducts} products` :
-                          `${products.length} products`
-                        }
+                        {pagination
+                          ? `Showing ${products.length} of ${pagination.totalProducts} products`
+                          : `${products.length} products`}
                       </p>
                       {pagination && pagination.totalPages > 1 && (
                         <span className="text-sm text-gray-500">
-                          Page {pagination.currentPage} of {pagination.totalPages}
+                          Page {pagination.currentPage} of{' '}
+                          {pagination.totalPages}
                         </span>
                       )}
                     </>
@@ -310,11 +310,14 @@ function ProductsContent() {
             {loading && (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {[...Array(12)].map((_, index) => (
-                  <div key={index} className="bg-white rounded-lg shadow-md p-4 animate-pulse">
-                    <div className="w-full h-48 bg-gray-200 rounded-lg mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded mb-2 w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  <div
+                    key={index}
+                    className="animate-pulse rounded-lg bg-white p-4 shadow-md"
+                  >
+                    <div className="mb-4 h-48 w-full rounded-lg bg-gray-200"></div>
+                    <div className="mb-2 h-4 rounded bg-gray-200"></div>
+                    <div className="mb-2 h-3 w-3/4 rounded bg-gray-200"></div>
+                    <div className="h-4 w-1/2 rounded bg-gray-200"></div>
                   </div>
                 ))}
               </div>
@@ -359,19 +362,19 @@ function ProductsContent() {
 
                 {/* Pagination */}
                 {pagination && pagination.totalPages > 1 && (
-                  <div className="mt-8 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-lg shadow-md">
+                  <div className="mt-8 flex items-center justify-between rounded-lg border-t border-gray-200 bg-white px-4 py-3 shadow-md sm:px-6">
                     <div className="flex flex-1 justify-between sm:hidden">
                       <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={!pagination.hasPrev}
-                        className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Previous
                       </button>
                       <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={!pagination.hasNext}
-                        className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Next
                       </button>
@@ -379,52 +382,80 @@ function ProductsContent() {
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                       <div>
                         <p className="text-sm text-gray-700">
-                          Showing page <span className="font-medium">{currentPage}</span> of{' '}
-                          <span className="font-medium">{pagination.totalPages}</span> ({pagination.totalProducts} total products)
+                          Showing page{' '}
+                          <span className="font-medium">{currentPage}</span> of{' '}
+                          <span className="font-medium">
+                            {pagination.totalPages}
+                          </span>{' '}
+                          ({pagination.totalProducts} total products)
                         </p>
                       </div>
                       <div>
-                        <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                        <nav
+                          className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+                          aria-label="Pagination"
+                        >
                           <button
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={!pagination.hasPrev}
-                            className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <span className="sr-only">Previous</span>
-                            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
+                            <svg
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                                clipRule="evenodd"
+                              />
                             </svg>
                           </button>
-                          
+
                           {/* Page Numbers */}
-                          {[...Array(Math.min(5, pagination.totalPages))].map((_, index) => {
-                            const pageNumber = Math.max(1, currentPage - 2) + index
-                            if (pageNumber <= pagination.totalPages) {
-                              return (
-                                <button
-                                  key={pageNumber}
-                                  onClick={() => handlePageChange(pageNumber)}
-                                  className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                                    pageNumber === currentPage
-                                      ? 'z-10 bg-peacock-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-peacock-600'
-                                      : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
-                                  }`}
-                                >
-                                  {pageNumber}
-                                </button>
-                              )
+                          {[...Array(Math.min(5, pagination.totalPages))].map(
+                            (_, index) => {
+                              const pageNumber =
+                                Math.max(1, currentPage - 2) + index
+                              if (pageNumber <= pagination.totalPages) {
+                                return (
+                                  <button
+                                    key={pageNumber}
+                                    onClick={() => handlePageChange(pageNumber)}
+                                    className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
+                                      pageNumber === currentPage
+                                        ? 'z-10 bg-peacock-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-peacock-600'
+                                        : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                                    }`}
+                                  >
+                                    {pageNumber}
+                                  </button>
+                                )
+                              }
+                              return null
                             }
-                            return null
-                          })}
+                          )}
 
                           <button
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={!pagination.hasNext}
-                            className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <span className="sr-only">Next</span>
-                            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                            <svg
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                                clipRule="evenodd"
+                              />
                             </svg>
                           </button>
                         </nav>
@@ -457,10 +488,9 @@ function ProductsContent() {
                   No products found
                 </h3>
                 <p className="mb-4 text-gray-600">
-                  {activeFiltersCount > 0 
-                    ? "Try adjusting your search or filter criteria"
-                    : "No products are available at the moment"
-                  }
+                  {activeFiltersCount > 0
+                    ? 'Try adjusting your search or filter criteria'
+                    : 'No products are available at the moment'}
                 </p>
                 {activeFiltersCount > 0 && (
                   <Button onClick={clearFilters} variant="outline">

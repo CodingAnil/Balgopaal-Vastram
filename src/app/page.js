@@ -9,21 +9,20 @@ import Product from '@/lib/models/Product'
 async function getFeaturedProductsFromDB() {
   try {
     await connectDB()
-    
-    const featuredProducts = await Product.find({ 
-      inStock: true 
+
+    const featuredProducts = await Product.find({
+      inStock: true,
     })
       .sort({ createdAt: -1 })
       .limit(8)
       .lean()
 
     // Convert MongoDB _id to string for serialization
-    return featuredProducts.map(product => ({
+    return featuredProducts.map((product) => ({
       ...product,
       _id: product._id.toString(),
-      id: product._id.toString() // Add id for compatibility
+      id: product._id.toString(), // Add id for compatibility
     }))
-
   } catch (error) {
     console.error('Error fetching featured products:', error)
     return []

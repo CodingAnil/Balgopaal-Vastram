@@ -8,7 +8,7 @@ export async function GET(request, { params }) {
     await connectDB()
 
     const { email } = params
-    
+
     if (!email) {
       return NextResponse.json(
         { error: 'Email parameter is required' },
@@ -27,12 +27,9 @@ export async function GET(request, { params }) {
 
     // Find user
     const user = await User.findOne({ email: email.toLowerCase() })
-    
+
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     // Get query parameters
@@ -56,7 +53,7 @@ export async function GET(request, { params }) {
         .skip(skip)
         .limit(limit)
         .lean(),
-      Order.countDocuments(filter)
+      Order.countDocuments(filter),
     ])
 
     // Calculate pagination info
@@ -65,10 +62,10 @@ export async function GET(request, { params }) {
     const hasPrev = page > 1
 
     // Format orders for response
-    const formattedOrders = orders.map(order => ({
+    const formattedOrders = orders.map((order) => ({
       id: order._id,
       orderId: order.orderId,
-      items: order.items.map(item => ({
+      items: order.items.map((item) => ({
         productId: item.productId?._id,
         name: item.name,
         size: item.size,
@@ -76,7 +73,7 @@ export async function GET(request, { params }) {
         quantity: item.quantity,
         price: item.price,
         image: item.productId?.image,
-        slug: item.productId?.slug
+        slug: item.productId?.slug,
       })),
       subtotal: order.subtotal,
       shipping: order.shipping,
@@ -89,7 +86,7 @@ export async function GET(request, { params }) {
       estimatedDelivery: order.estimatedDelivery,
       trackingNumber: order.trackingNumber,
       createdAt: order.createdAt,
-      updatedAt: order.updatedAt
+      updatedAt: order.updatedAt,
     }))
 
     return NextResponse.json({
@@ -98,7 +95,7 @@ export async function GET(request, { params }) {
         id: user._id,
         name: user.name,
         email: user.email,
-        phone: user.phone
+        phone: user.phone,
       },
       orders: formattedOrders,
       pagination: {
@@ -107,16 +104,15 @@ export async function GET(request, { params }) {
         totalOrders: total,
         hasNext,
         hasPrev,
-        limit
-      }
+        limit,
+      },
     })
-
   } catch (error) {
     console.error('Get user orders error:', error)
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to fetch user orders',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

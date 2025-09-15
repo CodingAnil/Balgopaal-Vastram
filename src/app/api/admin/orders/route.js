@@ -4,7 +4,6 @@ import Order from '@/lib/models/Order'
 
 export async function GET(request) {
   try {
-
     await connectDB()
 
     // Get query parameters for pagination
@@ -25,46 +24,50 @@ export async function GET(request) {
       Order.find(filter)
         .populate({
           path: 'user',
-          select: 'name email phone address city state pincode'
+          select: 'name email phone address city state pincode',
         })
         .populate({
           path: 'items.productId',
-          select: 'name price images slug category'
+          select: 'name price images slug category',
         })
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
-      Order.countDocuments(filter)
+      Order.countDocuments(filter),
     ])
 
     // Format orders for frontend
-    const formattedOrders = orders.map(order => ({
+    const formattedOrders = orders.map((order) => ({
       id: order._id.toString(),
       orderId: order.orderId,
-      user: order.user ? {
-        id: order.user._id.toString(),
-        name: order.user.name,
-        email: order.user.email,
-        phone: order.user.phone,
-        address: `${order.user.address}, ${order.user.city}, ${order.user.state} - ${order.user.pincode}`
-      } : null,
-      items: order.items.map(item => ({
+      user: order.user
+        ? {
+            id: order.user._id.toString(),
+            name: order.user.name,
+            email: order.user.email,
+            phone: order.user.phone,
+            address: `${order.user.address}, ${order.user.city}, ${order.user.state} - ${order.user.pincode}`,
+          }
+        : null,
+      items: order.items.map((item) => ({
         id: item._id.toString(),
         productId: item.productId ? item.productId._id.toString() : null,
-        product: item.productId ? {
-          name: item.productId.name,
-          price: item.productId.price,
-          images: item.productId.images || [],
-          slug: item.productId.slug,
-          category: item.productId.category
-        } : null,
+        product: item.productId
+          ? {
+              name: item.productId.name,
+              price: item.productId.price,
+              images: item.productId.images || [],
+              slug: item.productId.slug,
+              category: item.productId.category,
+            }
+          : null,
         name: item.name,
         size: item.size,
         color: item.color,
         quantity: item.quantity,
         price: item.price,
-        total: item.price * item.quantity
+        total: item.price * item.quantity,
       })),
       subtotal: order.subtotal,
       shipping: order.shipping,
@@ -80,7 +83,7 @@ export async function GET(request) {
       trackingNumber: order.trackingNumber,
       notes: order.notes,
       createdAt: order.createdAt,
-      updatedAt: order.updatedAt
+      updatedAt: order.updatedAt,
     }))
 
     // Calculate pagination info
@@ -97,16 +100,15 @@ export async function GET(request) {
         totalOrders: total,
         hasNext,
         hasPrev,
-        limit
-      }
+        limit,
+      },
     })
-
   } catch (error) {
     console.error('Admin orders API error:', error)
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to fetch orders',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )
@@ -115,9 +117,15 @@ export async function GET(request) {
 
 export async function PATCH(request) {
   try {
-
     const body = await request.json()
-    const { orderId, status, paymentStatus, trackingNumber, notes, estimatedDelivery } = body
+    const {
+      orderId,
+      status,
+      paymentStatus,
+      trackingNumber,
+      notes,
+      estimatedDelivery,
+    } = body
 
     if (!orderId) {
       return NextResponse.json(
@@ -134,26 +142,25 @@ export async function PATCH(request) {
     if (paymentStatus) updateData.paymentStatus = paymentStatus.toUpperCase()
     if (trackingNumber !== undefined) updateData.trackingNumber = trackingNumber
     if (notes !== undefined) updateData.notes = notes
-    if (estimatedDelivery) updateData.estimatedDelivery = new Date(estimatedDelivery)
+    if (estimatedDelivery)
+      updateData.estimatedDelivery = new Date(estimatedDelivery)
 
     // Update order
-    const updatedOrder = await Order.findOneAndUpdate(
-      { orderId },
-      updateData,
-      { new: true, runValidators: true }
-    ).populate({
-      path: 'user',
-      select: 'name email phone'
-    }).populate({
-      path: 'items.productId',
-      select: 'name price images'
+    const updatedOrder = await Order.findOneAndUpdate({ orderId }, updateData, {
+      new: true,
+      runValidators: true,
     })
+      .populate({
+        path: 'user',
+        select: 'name email phone',
+      })
+      .populate({
+        path: 'items.productId',
+        select: 'name price images',
+      })
 
     if (!updatedOrder) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -167,16 +174,15 @@ export async function PATCH(request) {
         trackingNumber: updatedOrder.trackingNumber,
         notes: updatedOrder.notes,
         estimatedDelivery: updatedOrder.estimatedDelivery,
-        updatedAt: updatedOrder.updatedAt
-      }
+        updatedAt: updatedOrder.updatedAt,
+      },
     })
-
   } catch (error) {
     console.error('Admin order update error:', error)
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to update order',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

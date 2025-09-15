@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link'
 
 export default function SaleBanner() {
   return (
@@ -48,10 +48,10 @@ export default function SaleBanner() {
           </div>
 
           <div className="mt-8">
-            <Link href="/products"> 
-            <button className="rounded-lg bg-white px-8 py-3 font-medium text-peacock-600 transition-colors duration-200 hover:bg-gray-100">
-              Shop Now
-            </button>
+            <Link href="/products">
+              <button className="rounded-lg bg-white px-8 py-3 font-medium text-peacock-600 transition-colors duration-200 hover:bg-gray-100">
+                Shop Now
+              </button>
             </Link>
           </div>
         </div>

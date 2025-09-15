@@ -135,8 +135,6 @@ export default function CategorySection() {
             </Link>
           ))}
         </div>
-
-
       </div>
     </section>
   )

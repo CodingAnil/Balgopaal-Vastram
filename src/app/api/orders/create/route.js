@@ -21,16 +21,16 @@ export async function POST(request) {
       paymentMethod = 'RAZORPAY',
       razorpayOrderId,
       razorpayPaymentId,
-      razorpaySignature
+      razorpaySignature,
     } = body
 
     // Validation
     if (!userInfo || !items || !Array.isArray(items) || items.length === 0) {
-      console.error('Validation failed - missing basic data:', { 
-        hasUserInfo: !!userInfo, 
-        hasItems: !!items, 
-        isItemsArray: Array.isArray(items), 
-        itemsLength: items?.length 
+      console.error('Validation failed - missing basic data:', {
+        hasUserInfo: !!userInfo,
+        hasItems: !!items,
+        isItemsArray: Array.isArray(items),
+        itemsLength: items?.length,
       })
       return NextResponse.json(
         { error: 'User information and items are required' },
@@ -38,7 +38,15 @@ export async function POST(request) {
       )
     }
 
-    if (!userInfo.name || !userInfo.email || !userInfo.phone || !userInfo.address || !userInfo.city || !userInfo.state || !userInfo.pincode) {
+    if (
+      !userInfo.name ||
+      !userInfo.email ||
+      !userInfo.phone ||
+      !userInfo.address ||
+      !userInfo.city ||
+      !userInfo.state ||
+      !userInfo.pincode
+    ) {
       console.error('Validation failed - incomplete user info:', {
         name: !!userInfo.name,
         email: !!userInfo.email,
@@ -47,10 +55,13 @@ export async function POST(request) {
         city: !!userInfo.city,
         state: !!userInfo.state,
         pincode: !!userInfo.pincode,
-        userInfo: userInfo
+        userInfo: userInfo,
       })
       return NextResponse.json(
-        { error: 'All user information fields are required: name, email, phone, address, city, state, pincode' },
+        {
+          error:
+            'All user information fields are required: name, email, phone, address, city, state, pincode',
+        },
         { status: 400 }
       )
     }
@@ -64,16 +75,29 @@ export async function POST(request) {
 
     // Validate items
     for (const item of items) {
-      if (!item.productId || !item.name || !item.size || !item.color || !item.quantity || !item.price) {
+      if (
+        !item.productId ||
+        !item.name ||
+        !item.size ||
+        !item.color ||
+        !item.quantity ||
+        !item.price
+      ) {
         return NextResponse.json(
-          { error: 'Each item must have: productId, name, size, color, quantity, price' },
+          {
+            error:
+              'Each item must have: productId, name, size, color, quantity, price',
+          },
           { status: 400 }
         )
       }
 
       if (item.quantity < 1 || item.price < 0) {
         return NextResponse.json(
-          { error: 'Item quantity must be at least 1 and price cannot be negative' },
+          {
+            error:
+              'Item quantity must be at least 1 and price cannot be negative',
+          },
           { status: 400 }
         )
       }
@@ -107,9 +131,9 @@ export async function POST(request) {
     // }
 
     // Verify products exist and are in stock
-    const productIds = items.map(item => item.productId)
+    const productIds = items.map((item) => item.productId)
     const products = await Product.find({ _id: { $in: productIds } })
-    
+
     if (products.length !== productIds.length) {
       return NextResponse.json(
         { error: 'Some products in the order were not found' },
@@ -121,7 +145,7 @@ export async function POST(request) {
     // const outOfStockProducts = products.filter(product => !product.inStock)
     // if (outOfStockProducts.length > 0) {
     //   return NextResponse.json(
-    //     { 
+    //     {
     //       error: 'Some products are out of stock',
     //       outOfStockProducts: outOfStockProducts.map(p => p.name)
     //     },
@@ -131,7 +155,7 @@ export async function POST(request) {
 
     // Find or create user
     let user = await User.findOne({ email: userInfo.email.toLowerCase() })
-    
+
     if (!user) {
       // Create new user
       user = new User({
@@ -141,7 +165,7 @@ export async function POST(request) {
         address: userInfo.address.trim(),
         city: userInfo.city.trim(),
         state: userInfo.state.trim(),
-        pincode: userInfo.pincode.trim()
+        pincode: userInfo.pincode.trim(),
       })
       await user.save()
     } else {
@@ -158,13 +182,13 @@ export async function POST(request) {
     // Create order
     const orderData = {
       user: user._id,
-      items: items.map(item => ({
+      items: items.map((item) => ({
         productId: item.productId,
         name: item.name,
         size: item.size,
         color: item.color,
         quantity: parseInt(item.quantity),
-        price: parseFloat(item.price)
+        price: parseFloat(item.price),
       })),
       subtotal: parseFloat(subtotal),
       shipping: parseFloat(shipping),
@@ -177,8 +201,8 @@ export async function POST(request) {
         address: userInfo.address,
         city: userInfo.city,
         state: userInfo.state,
-        pincode: userInfo.pincode
-      }
+        pincode: userInfo.pincode,
+      },
     }
 
     // Add Razorpay details if provided
@@ -216,7 +240,7 @@ export async function POST(request) {
           address: order.shippingAddress.address,
           city: order.shippingAddress.city,
           state: order.shippingAddress.state,
-          pincode: order.shippingAddress.pincode
+          pincode: order.shippingAddress.pincode,
         },
         items: order.items,
         subtotal: order.subtotal,
@@ -227,19 +251,25 @@ export async function POST(request) {
         paymentStatus: order.paymentStatus,
         status: order.status,
         createdAt: order.createdAt,
-        estimatedDelivery: order.estimatedDelivery
+        estimatedDelivery: order.estimatedDelivery,
       }
 
       // Send emails asynchronously (don't wait for completion)
       Promise.all([
         sendOrderEmail('user', emailOrderData),
-        sendOrderEmail('admin', emailOrderData)
-      ]).then(([userEmailSent, adminEmailSent]) => {
-        console.log(`Order ${order.orderId} emails sent - User: ${userEmailSent}, Admin: ${adminEmailSent}`)
-      }).catch(error => {
-        console.error(`Failed to send emails for order ${order.orderId}:`, error)
-      })
-
+        sendOrderEmail('admin', emailOrderData),
+      ])
+        .then(([userEmailSent, adminEmailSent]) => {
+          console.log(
+            `Order ${order.orderId} emails sent - User: ${userEmailSent}, Admin: ${adminEmailSent}`
+          )
+        })
+        .catch((error) => {
+          console.error(
+            `Failed to send emails for order ${order.orderId}:`,
+            error
+          )
+        })
     } catch (emailError) {
       // Log email error but don't fail the order creation
       console.error('Email notification error:', emailError)
@@ -248,42 +278,45 @@ export async function POST(request) {
         stack: emailError.stack,
         orderData: {
           orderId: order.orderId,
-          userEmail: order.user.email
-        }
+          userEmail: order.user.email,
+        },
       })
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Order created successfully. Email confirmations are being sent.',
-      order: {
-        id: order._id,
-        orderId: order.orderId,
-        user: {
-          name: order.user.name,
-          email: order.user.email,
-          phone: order.user.phone
+    return NextResponse.json(
+      {
+        success: true,
+        message:
+          'Order created successfully. Email confirmations are being sent.',
+        order: {
+          id: order._id,
+          orderId: order.orderId,
+          user: {
+            name: order.user.name,
+            email: order.user.email,
+            phone: order.user.phone,
+          },
+          items: order.items,
+          subtotal: order.subtotal,
+          shipping: order.shipping,
+          tax: order.tax,
+          total: order.total,
+          status: order.status,
+          paymentStatus: order.paymentStatus,
+          paymentMethod: order.paymentMethod,
+          shippingAddress: order.shippingAddress,
+          estimatedDelivery: order.estimatedDelivery,
+          createdAt: order.createdAt,
         },
-        items: order.items,
-        subtotal: order.subtotal,
-        shipping: order.shipping,
-        tax: order.tax,
-        total: order.total,
-        status: order.status,
-        paymentStatus: order.paymentStatus,
-        paymentMethod: order.paymentMethod,
-        shippingAddress: order.shippingAddress,
-        estimatedDelivery: order.estimatedDelivery,
-        createdAt: order.createdAt
-      }
-    }, { status: 201 })
-
+      },
+      { status: 201 }
+    )
   } catch (error) {
     console.error('Create order error:', error)
-    
+
     // Handle validation errors
     if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(err => err.message)
+      const messages = Object.values(error.errors).map((err) => err.message)
       return NextResponse.json(
         { error: 'Validation failed', details: messages },
         { status: 400 }
@@ -299,9 +332,9 @@ export async function POST(request) {
     }
 
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to create order',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

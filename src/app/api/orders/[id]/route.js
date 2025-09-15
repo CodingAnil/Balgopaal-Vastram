@@ -7,7 +7,7 @@ export async function GET(request, { params }) {
     await connectDB()
 
     const { id } = params
-    
+
     if (!id) {
       return NextResponse.json(
         { error: 'Order ID parameter is required' },
@@ -17,7 +17,7 @@ export async function GET(request, { params }) {
 
     // Find order by either MongoDB _id or orderId
     let order
-    
+
     // Check if it's a MongoDB ObjectId format
     if (id.match(/^[0-9a-fA-F]{24}$/)) {
       order = await Order.findById(id)
@@ -27,16 +27,13 @@ export async function GET(request, { params }) {
     }
 
     if (!order) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
     // Populate order with user and product details
     await order.populate([
       { path: 'user', select: 'name email phone' },
-      { path: 'items.productId', select: 'name image slug category' }
+      { path: 'items.productId', select: 'name image slug category' },
     ])
 
     // Format order for response
@@ -47,9 +44,9 @@ export async function GET(request, { params }) {
         id: order.user._id,
         name: order.user.name,
         email: order.user.email,
-        phone: order.user.phone
+        phone: order.user.phone,
       },
-      items: order.items.map(item => ({
+      items: order.items.map((item) => ({
         productId: item.productId?._id,
         name: item.name,
         size: item.size,
@@ -58,7 +55,7 @@ export async function GET(request, { params }) {
         price: item.price,
         image: item.productId?.image,
         slug: item.productId?.slug,
-        category: item.productId?.category
+        category: item.productId?.category,
       })),
       subtotal: order.subtotal,
       shipping: order.shipping,
@@ -74,20 +71,19 @@ export async function GET(request, { params }) {
       trackingNumber: order.trackingNumber,
       notes: order.notes,
       createdAt: order.createdAt,
-      updatedAt: order.updatedAt
+      updatedAt: order.updatedAt,
     }
 
     return NextResponse.json({
       success: true,
-      order: formattedOrder
+      order: formattedOrder,
     })
-
   } catch (error) {
     console.error('Get order error:', error)
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to fetch order',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )
@@ -100,7 +96,7 @@ export async function PATCH(request, { params }) {
 
     const { id } = params
     const body = await request.json()
-    
+
     if (!id) {
       return NextResponse.json(
         { error: 'Order ID parameter is required' },
@@ -117,20 +113,29 @@ export async function PATCH(request, { params }) {
     }
 
     if (!order) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
     // Update allowed fields
-    const allowedUpdates = ['status', 'paymentStatus', 'trackingNumber', 'notes', 'estimatedDelivery']
+    const allowedUpdates = [
+      'status',
+      'paymentStatus',
+      'trackingNumber',
+      'notes',
+      'estimatedDelivery',
+    ]
     const updates = {}
 
     for (const field of allowedUpdates) {
       if (body[field] !== undefined) {
         if (field === 'status') {
-          const validStatuses = ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED']
+          const validStatuses = [
+            'PENDING',
+            'CONFIRMED',
+            'SHIPPED',
+            'DELIVERED',
+            'CANCELLED',
+          ]
           if (!validStatuses.includes(body[field].toUpperCase())) {
             return NextResponse.json(
               { error: `Status must be one of: ${validStatuses.join(', ')}` },
@@ -142,7 +147,9 @@ export async function PATCH(request, { params }) {
           const validPaymentStatuses = ['PENDING', 'PAID', 'FAILED', 'REFUNDED']
           if (!validPaymentStatuses.includes(body[field].toUpperCase())) {
             return NextResponse.json(
-              { error: `Payment status must be one of: ${validPaymentStatuses.join(', ')}` },
+              {
+                error: `Payment status must be one of: ${validPaymentStatuses.join(', ')}`,
+              },
               { status: 400 }
             )
           }
@@ -169,7 +176,7 @@ export async function PATCH(request, { params }) {
     // Populate for response
     await order.populate([
       { path: 'user', select: 'name email phone' },
-      { path: 'items.productId', select: 'name image slug category' }
+      { path: 'items.productId', select: 'name image slug category' },
     ])
 
     return NextResponse.json({
@@ -183,15 +190,14 @@ export async function PATCH(request, { params }) {
         trackingNumber: order.trackingNumber,
         notes: order.notes,
         estimatedDelivery: order.estimatedDelivery,
-        updatedAt: order.updatedAt
-      }
+        updatedAt: order.updatedAt,
+      },
     })
-
   } catch (error) {
     console.error('Update order error:', error)
-    
+
     if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(err => err.message)
+      const messages = Object.values(error.errors).map((err) => err.message)
       return NextResponse.json(
         { error: 'Validation failed', details: messages },
         { status: 400 }
@@ -199,9 +205,9 @@ export async function PATCH(request, { params }) {
     }
 
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to update order',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

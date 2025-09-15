@@ -5,7 +5,6 @@ import Link from 'next/link'
 import ProductCard from '@/components/ui/product-card'
 
 export default function FeaturedProducts({ products = [] }) {
-
   if (!products || products.length === 0) {
     return (
       <section className="bg-gray-50 py-16">
@@ -15,12 +14,13 @@ export default function FeaturedProducts({ products = [] }) {
               Featured Products
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-gray-600">
-              No featured products available. Add some products via the admin panel!
+              No featured products available. Add some products via the admin
+              panel!
             </p>
             <div className="mt-4">
-              <a 
-                href="/admin" 
-                className="inline-block rounded-lg bg-peacock-600 px-6 py-2 text-white hover:bg-peacock-700 transition-colors"
+              <a
+                href="/admin"
+                className="inline-block rounded-lg bg-peacock-600 px-6 py-2 text-white transition-colors hover:bg-peacock-700"
               >
                 Go to Admin Panel
               </a>
@@ -58,8 +58,7 @@ export default function FeaturedProducts({ products = [] }) {
               View All Products
             </button>
           </Link>
-        </div>  
-    
+        </div>
       </div>
     </section>
   )

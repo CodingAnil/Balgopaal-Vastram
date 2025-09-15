@@ -55,13 +55,15 @@ export default function Testimonials() {
         </div>
 
         {/* Testimonials Grid - Show only 3 at a time */}
-        <div className={`grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300 ${isLoading ? 'opacity-50' : 'opacity-100'}`}>
+        <div
+          className={`grid grid-cols-1 gap-8 transition-opacity duration-300 md:grid-cols-2 lg:grid-cols-3 ${isLoading ? 'opacity-50' : 'opacity-100'}`}
+        >
           {currentTestimonials.map((testimonial) => (
             <div
               key={testimonial.id}
               className="rounded-lg bg-gray-50 p-6 transition-all duration-500 hover:shadow-lg"
               style={{
-                animation: 'fadeIn 0.5s ease-in-out'
+                animation: 'fadeIn 0.5s ease-in-out',
               }}
             >
               {/* Rating */}
@@ -73,8 +75,8 @@ export default function Testimonials() {
                       i < Math.floor(testimonial.rating)
                         ? 'text-yellow-400'
                         : i < testimonial.rating
-                        ? 'text-yellow-400'
-                        : 'text-gray-300'
+                          ? 'text-yellow-400'
+                          : 'text-gray-300'
                     }`}
                     fill={i < testimonial.rating ? 'currentColor' : 'none'}
                     stroke="currentColor"

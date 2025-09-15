@@ -22,7 +22,7 @@ export default function AdminPage() {
     colors: [''],
     sizes: [],
     images: [],
-    features: ['']
+    features: [''],
   })
   const [selectedFiles, setSelectedFiles] = useState([])
   const [imagePreviewUrls, setImagePreviewUrls] = useState([])
@@ -43,7 +43,7 @@ export default function AdminPage() {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
+
     try {
       const response = await fetch('/api/admin/auth', {
         method: 'POST',
@@ -58,13 +58,13 @@ export default function AdminPage() {
       if (response.ok) {
         setIsAuthenticated(true)
         sessionStorage.setItem('admin-access', 'true')
-        showToast('Welcome to Admin Panel!','success')
+        showToast('Welcome to Admin Panel!', 'success')
       } else {
-        showToast(data.error || 'Invalid password','error')
+        showToast(data.error || 'Invalid password', 'error')
       }
     } catch (error) {
       console.error('Authentication error:', error)
-      showToast('Authentication failed. Please try again.','error')
+      showToast('Authentication failed. Please try again.', 'error')
     } finally {
       setLoading(false)
     }
@@ -72,110 +72,118 @@ export default function AdminPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
   const handleArrayInputChange = (field, index, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: prev[field].map((item, i) => i === index ? value : item)
+      [field]: prev[field].map((item, i) => (i === index ? value : item)),
     }))
   }
 
   const addArrayField = (field) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: [...prev[field], '']
+      [field]: [...prev[field], ''],
     }))
   }
 
   const removeArrayField = (field, index) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
+      [field]: prev[field].filter((_, i) => i !== index),
     }))
   }
 
   const handleSizeToggle = (size) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       sizes: prev.sizes.includes(size)
-        ? prev.sizes.filter(s => s !== size)
-        : [...prev.sizes, size]
+        ? prev.sizes.filter((s) => s !== size)
+        : [...prev.sizes, size],
     }))
   }
 
   const handleImageSelect = (e) => {
     const files = Array.from(e.target.files)
     const maxFiles = 5
-    
+
     if (files.length > maxFiles) {
-      showToast(`Maximum ${maxFiles} images allowed`,`error`)
+      showToast(`Maximum ${maxFiles} images allowed`, `error`)
       return
     }
 
     // Validate file types and sizes
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
     const maxSize = 5 * 1024 * 1024 // 5MB
-    
+
     for (const file of files) {
       if (!validTypes.includes(file.type)) {
-        showToast(`Invalid file type: ${file.name}. Only JPG, PNG, and WebP allowed.`,`error`)
+        showToast(
+          `Invalid file type: ${file.name}. Only JPG, PNG, and WebP allowed.`,
+          `error`
+        )
         return
       }
       if (file.size > maxSize) {
-        showToast(`File too large: ${file.name}. Maximum 5MB allowed.`,`error`)
+        showToast(`File too large: ${file.name}. Maximum 5MB allowed.`, `error`)
         return
       }
     }
 
     setSelectedFiles(files)
-    
+
     // Create preview URLs
-    const previewUrls = files.map(file => URL.createObjectURL(file))
+    const previewUrls = files.map((file) => URL.createObjectURL(file))
     setImagePreviewUrls(previewUrls)
   }
 
   const removeImage = (index) => {
     const newFiles = selectedFiles.filter((_, i) => i !== index)
     const newPreviews = imagePreviewUrls.filter((_, i) => i !== index)
-    
+
     // Revoke the removed URL to free memory
     URL.revokeObjectURL(imagePreviewUrls[index])
-    
+
     setSelectedFiles(newFiles)
     setImagePreviewUrls(newPreviews)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     // Validation
-    if (!formData.name || !formData.description || !formData.price || !formData.category) {
-      showToast('Please fill in all required fields','error')
+    if (
+      !formData.name ||
+      !formData.description ||
+      !formData.price ||
+      !formData.category
+    ) {
+      showToast('Please fill in all required fields', 'error')
       return
     }
 
-    if (formData.colors.filter(c => c.trim()).length === 0) {
-      showToast('At least one color is required','error')
+    if (formData.colors.filter((c) => c.trim()).length === 0) {
+      showToast('At least one color is required', 'error')
       return
     }
 
     if (formData.sizes.length === 0) {
-      showToast('At least one size must be selected','error')
+      showToast('At least one size must be selected', 'error')
       return
     }
 
     if (selectedFiles.length === 0) {
-      showToast('At least one image is required','error')
+      showToast('At least one image is required', 'error')
       return
     }
 
     if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-      showToast('Please enter a valid price','error')
+      showToast('Please enter a valid price', 'error')
       return
     }
 
@@ -184,10 +192,10 @@ export default function AdminPage() {
 
     try {
       // Step 1: Upload images to Cloudinary
-      showToast('Uploading images...','info')
-          
+      showToast('Uploading images...', 'info')
+
       const imageFormData = new FormData()
-      selectedFiles.forEach(file => {
+      selectedFiles.forEach((file) => {
         imageFormData.append('images', file)
       })
       imageFormData.append('adminPassword', password)
@@ -204,17 +212,19 @@ export default function AdminPage() {
       }
 
       // Step 2: Save product with Cloudinary URLs
-      showToast('Saving product...','info')
-      
+      showToast('Saving product...', 'info')
+
       const productData = {
         ...formData,
-        colors: formData.colors.filter(c => c.trim()),
+        colors: formData.colors.filter((c) => c.trim()),
         images: uploadData.urls, // Use Cloudinary URLs
-        features: formData.features.filter(f => f.trim()),
+        features: formData.features.filter((f) => f.trim()),
         price: parseFloat(formData.price),
-        originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : undefined,
+        originalPrice: formData.originalPrice
+          ? parseFloat(formData.originalPrice)
+          : undefined,
         discount: parseFloat(formData.discount),
-        adminPassword: password
+        adminPassword: password,
       }
 
       const response = await fetch('/api/products/add', {
@@ -228,8 +238,8 @@ export default function AdminPage() {
       const data = await response.json()
 
       if (response.ok) {
-        showToast('Product added successfully!','success')
-        
+        showToast('Product added successfully!', 'success')
+
         // Reset form and images
         setFormData({
           name: '',
@@ -241,19 +251,22 @@ export default function AdminPage() {
           colors: [''],
           sizes: [],
           images: [],
-          features: ['']
+          features: [''],
         })
-        
+
         // Clean up image previews
-        imagePreviewUrls.forEach(url => URL.revokeObjectURL(url))
+        imagePreviewUrls.forEach((url) => URL.revokeObjectURL(url))
         setSelectedFiles([])
         setImagePreviewUrls([])
       } else {
-        showToast(data.error || 'Failed to add product','error')
+        showToast(data.error || 'Failed to add product', 'error')
       }
     } catch (error) {
       console.error('Add product error:', error)
-      showToast(error.message || 'Failed to add product. Please try again.','error')
+      showToast(
+        error.message || 'Failed to add product. Please try again.',
+        'error'
+      )
     } finally {
       setLoading(false)
       setUploading(false)
@@ -268,8 +281,8 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
               Admin Access Required
@@ -290,15 +303,20 @@ export default function AdminPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-peacock-500 focus:border-peacock-500 focus:z-10 sm:text-sm"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-peacock-500 focus:outline-none focus:ring-peacock-500 sm:text-sm"
                 placeholder="Admin password"
               />
-              <div className="text-sm text-gray-600 cursor-pointer py-2" onClick={() => setShowPassword(!showPassword)}>{showPassword ? 'hide password' : 'show password'}</div>
+              <div
+                className="cursor-pointer py-2 text-sm text-gray-600"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? 'hide password' : 'show password'}
+              </div>
             </div>
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-peacock-600 hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-peacock-500"
+                className="group relative flex w-full justify-center rounded-md border border-transparent bg-peacock-600 px-4 py-2 text-sm font-medium text-white hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2"
               >
                 Access Admin Panel
               </button>
@@ -311,11 +329,11 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-4xl">
         {/* Header */}
-        <div className="bg-white shadow rounded-lg mb-8">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <div className="mb-8 rounded-lg bg-white shadow">
+          <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Admin Panel</h1>
               <p className="text-sm text-gray-600">Manage your store</p>
@@ -323,13 +341,13 @@ export default function AdminPage() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push('/admin/orders')}
-                className="px-4 py-2 text-sm font-medium text-white bg-peacock-600 border border-transparent rounded-md hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2 transition-colors"
+                className="rounded-md border border-transparent bg-peacock-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2"
               >
                 View Orders
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                className="rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
               >
                 Logout
               </button>
@@ -379,17 +397,24 @@ export default function AdminPage() {
         </div> */}
 
         {/* Add Product Form */}
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Add New Product</h2>
-            <p className="text-sm text-gray-600 mt-1">Upload images and add product details</p>
+        <div className="rounded-lg bg-white shadow">
+          <div className="border-b border-gray-200 px-6 py-4">
+            <h2 className="text-xl font-semibold text-gray-900">
+              Add New Product
+            </h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Upload images and add product details
+            </p>
           </div>
-          
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+
+          <form onSubmit={handleSubmit} className="space-y-6 p-6">
             {/* Basic Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="name"
+                  className="mb-1 block text-sm font-medium text-gray-700"
+                >
                   Product Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -398,15 +423,18 @@ export default function AdminPage() {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                   placeholder="Enter product name"
                   required
                   disabled={loading}
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="category"
+                  className="mb-1 block text-sm font-medium text-gray-700"
+                >
                   Category <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -414,12 +442,14 @@ export default function AdminPage() {
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                   required
                   disabled={loading}
                 >
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -427,7 +457,10 @@ export default function AdminPage() {
 
             {/* Description */}
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="description"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Description <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -436,7 +469,7 @@ export default function AdminPage() {
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                 placeholder="Enter product description"
                 required
                 disabled={loading}
@@ -444,9 +477,12 @@ export default function AdminPage() {
             </div>
 
             {/* Pricing */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               <div>
-                <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="price"
+                  className="mb-1 block text-sm font-medium text-gray-700"
+                >
                   Price (₹) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -457,15 +493,18 @@ export default function AdminPage() {
                   onChange={handleInputChange}
                   min="0"
                   step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                   placeholder="0.00"
                   required
                   disabled={loading}
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="originalPrice" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="originalPrice"
+                  className="mb-1 block text-sm font-medium text-gray-700"
+                >
                   Original Price (₹)
                 </label>
                 <input
@@ -476,14 +515,17 @@ export default function AdminPage() {
                   onChange={handleInputChange}
                   min="0"
                   step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                   placeholder="0.00"
                   disabled={loading}
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="discount" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="discount"
+                  className="mb-1 block text-sm font-medium text-gray-700"
+                >
                   Discount (%)
                 </label>
                 <input
@@ -494,7 +536,7 @@ export default function AdminPage() {
                   onChange={handleInputChange}
                   min="0"
                   max="100"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                   placeholder="0"
                   disabled={loading}
                 />
@@ -503,16 +545,18 @@ export default function AdminPage() {
 
             {/* Colors */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
                 Colors <span className="text-red-500">*</span>
               </label>
               {formData.colors.map((color, index) => (
-                <div key={index} className="flex gap-2 mb-2">
+                <div key={index} className="mb-2 flex gap-2">
                   <input
                     type="text"
                     value={color}
-                    onChange={(e) => handleArrayInputChange('colors', index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                    onChange={(e) =>
+                      handleArrayInputChange('colors', index, e.target.value)
+                    }
+                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                     placeholder="Enter color"
                     disabled={loading}
                   />
@@ -540,11 +584,11 @@ export default function AdminPage() {
 
             {/* Sizes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
                 Sizes <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-7 gap-2">
-                {availableSizes.map(size => (
+                {availableSizes.map((size) => (
                   <label key={size} className="flex items-center">
                     <input
                       type="checkbox"
@@ -561,13 +605,13 @@ export default function AdminPage() {
 
             {/* Images */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
                 Product Images <span className="text-red-500">*</span>
               </label>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="mb-4 text-sm text-gray-600">
                 Select up to 5 images (JPG, PNG, WebP). Maximum 5MB per image.
               </p>
-              
+
               {/* File Input */}
               <div className="mb-4">
                 <input
@@ -576,32 +620,32 @@ export default function AdminPage() {
                   multiple
                   accept="image/jpeg,image/jpg,image/png,image/webp"
                   onChange={handleImageSelect}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                   disabled={loading || uploading}
                 />
               </div>
 
               {/* Image Previews */}
               {imagePreviewUrls.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+                <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
                   {imagePreviewUrls.map((url, index) => (
-                    <div key={index} className="relative group">
-                      <div className="aspect-square rounded-lg overflow-hidden border border-gray-300">
+                    <div key={index} className="group relative">
+                      <div className="aspect-square overflow-hidden rounded-lg border border-gray-300">
                         <img
                           src={url}
                           alt={`Preview ${index + 1}`}
-                          className="w-full h-full object-cover"
+                          className="h-full w-full object-cover"
                         />
                       </div>
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                        className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-colors hover:bg-red-600"
                         disabled={loading || uploading}
                       >
                         ×
                       </button>
-                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 text-center rounded-b-lg">
+                      <div className="absolute bottom-0 left-0 right-0 rounded-b-lg bg-black bg-opacity-50 p-1 text-center text-xs text-white">
                         {(selectedFiles[index].size / 1024 / 1024).toFixed(1)}MB
                       </div>
                     </div>
@@ -611,8 +655,8 @@ export default function AdminPage() {
 
               {/* Upload Status */}
               {uploading && (
-                <div className="flex items-center space-x-2 text-peacock-600 mb-4">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-peacock-600"></div>
+                <div className="mb-4 flex items-center space-x-2 text-peacock-600">
+                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-peacock-600"></div>
                   <span className="text-sm">Uploading images...</span>
                 </div>
               )}
@@ -620,16 +664,18 @@ export default function AdminPage() {
 
             {/* Features */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
                 Features
               </label>
               {formData.features.map((feature, index) => (
-                <div key={index} className="flex gap-2 mb-2">
+                <div key={index} className="mb-2 flex gap-2">
                   <input
                     type="text"
                     value={feature}
-                    onChange={(e) => handleArrayInputChange('features', index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                    onChange={(e) =>
+                      handleArrayInputChange('features', index, e.target.value)
+                    }
+                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                     placeholder="Enter product feature"
                     disabled={loading}
                   />
@@ -659,10 +705,14 @@ export default function AdminPage() {
             <div className="flex justify-end pt-6">
               <button
                 type="submit"
-                className="px-6 py-3 text-sm font-medium text-white bg-peacock-600 border border-transparent rounded-md hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md border border-transparent bg-peacock-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={loading || uploading}
               >
-                {uploading ? 'Uploading Images...' : loading ? 'Adding Product...' : 'Add Product'}
+                {uploading
+                  ? 'Uploading Images...'
+                  : loading
+                    ? 'Adding Product...'
+                    : 'Add Product'}
               </button>
             </div>
           </form>

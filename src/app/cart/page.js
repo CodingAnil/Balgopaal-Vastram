@@ -130,9 +130,17 @@ export default function CartPage() {
           <div className="lg:col-span-2">
             <div className="rounded-lg bg-white shadow-md">
               <div className="p-6">
-                <h2 className="mb-6 text-lg text-space-between font-semibold text-gray-900">
-                  Cart Items  <span className="text-sm text-gray-500">Total Items: ({cart.length}) </span>  
-                  <button onClick={handleClearCart} className="text-sm text-red-500">Clear All</button>
+                <h2 className="text-space-between mb-6 text-lg font-semibold text-gray-900">
+                  Cart Items{' '}
+                  <span className="text-sm text-gray-500">
+                    Total Items: ({cart.length}){' '}
+                  </span>
+                  <button
+                    onClick={handleClearCart}
+                    className="text-sm text-red-500"
+                  >
+                    Clear All
+                  </button>
                 </h2>
                 <div className="space-y-6">
                   {cart.map((item) => (

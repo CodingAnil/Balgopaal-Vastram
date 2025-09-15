@@ -156,7 +156,9 @@ export default function CheckoutPage() {
     // Check if Razorpay key is available
     const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID
     if (!razorpayKey || razorpayKey === 'your_razorpay_key_id_here') {
-      throw new Error('Razorpay key not configured. Please set NEXT_PUBLIC_RAZORPAY_KEY_ID in .env.local')
+      throw new Error(
+        'Razorpay key not configured. Please set NEXT_PUBLIC_RAZORPAY_KEY_ID in .env.local'
+      )
     }
 
     const razorpayOrder = await createRazorpayOrder(orderData.total)
@@ -192,13 +194,13 @@ export default function CheckoutPage() {
           // Save order to database
           const dbOrder = await saveOrderToDatabase({
             userInfo: orderData.customer,
-            items: orderData.items.map(item => ({
+            items: orderData.items.map((item) => ({
               productId: item.id || item.productId,
               name: item.name,
               size: item.size,
               color: item.color,
               quantity: item.quantity,
-              price: item.price
+              price: item.price,
             })),
             subtotal: orderData.subtotal,
             shipping: orderData.shipping,
@@ -206,7 +208,7 @@ export default function CheckoutPage() {
             paymentMethod: 'RAZORPAY',
             razorpayOrderId: response.razorpay_order_id,
             razorpayPaymentId: response.razorpay_payment_id,
-            razorpaySignature: response.razorpay_signature
+            razorpaySignature: response.razorpay_signature,
           })
 
           // Update order data with payment info and database details
@@ -237,7 +239,10 @@ export default function CheckoutPage() {
           window.open(whatsappUrl, '_blank')
 
           // Show success message
-          showToast('Payment successful! Redirecting to confirmation...', 'success')
+          showToast(
+            'Payment successful! Redirecting to confirmation...',
+            'success'
+          )
 
           // Redirect to confirmation page
           setTimeout(() => {
@@ -245,7 +250,10 @@ export default function CheckoutPage() {
           }, 2000)
         } catch (error) {
           console.error('Payment verification failed:', error)
-          showToast('Payment verification failed. Please contact support.', 'error')
+          showToast(
+            'Payment verification failed. Please contact support.',
+            'error'
+          )
         }
       },
       modal: {
@@ -265,18 +273,18 @@ export default function CheckoutPage() {
       // Save order to database (COD method)
       const dbOrder = await saveOrderToDatabase({
         userInfo: orderData.customer,
-        items: orderData.items.map(item => ({
+        items: orderData.items.map((item) => ({
           productId: item.id || item.productId,
           name: item.name,
           size: item.size,
           color: item.color,
           quantity: item.quantity,
-          price: item.price
+          price: item.price,
         })),
         subtotal: orderData.subtotal,
         shipping: orderData.shipping,
         total: orderData.total,
-        paymentMethod: 'COD'
+        paymentMethod: 'COD',
       })
 
       // Update order data with database details
@@ -284,7 +292,7 @@ export default function CheckoutPage() {
         ...orderData,
         dbOrderId: dbOrder?.order?.id,
         dbOrderNumber: dbOrder?.order?.orderId,
-        paymentMethod: 'COD'
+        paymentMethod: 'COD',
       }
 
       // Create WhatsApp message
@@ -306,13 +314,16 @@ export default function CheckoutPage() {
       }, 2000)
     } catch (error) {
       console.error('Error processing WhatsApp order:', error)
-      showToast('There was an error processing your order. Please try again.', 'error')
+      showToast(
+        'There was an error processing your order. Please try again.',
+        'error'
+      )
     }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (paymentMethod === 'razorpay' && !razorpayLoaded) {
       showToast('Payment system is loading. Please wait...', 'info')
       return
@@ -349,16 +360,25 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       console.error('Error processing order:', error)
-      
+
       // Show specific error messages
       if (error.message.includes('Razorpay key not configured')) {
-        showToast('Payment system not configured. Please contact support.', 'error')
+        showToast(
+          'Payment system not configured. Please contact support.',
+          'error'
+        )
       } else if (error.message.includes('Razorpay not loaded')) {
-        showToast('Payment system failed to load. Please refresh the page.', 'error')
+        showToast(
+          'Payment system failed to load. Please refresh the page.',
+          'error'
+        )
       } else {
-        showToast('There was an error processing your order. Please try again.', 'error')
+        showToast(
+          'There was an error processing your order. Please try again.',
+          'error'
+        )
       }
-      
+
       setIsProcessing(false)
     }
   }
@@ -582,21 +602,29 @@ export default function CheckoutPage() {
                       Secure payment via UPI, Cards, Net Banking, Wallets
                     </p>
                   </div>
-
                 </div>
 
                 {/* Payment Info */}
                 <div className="mt-6 rounded-lg bg-gray-50 p-4">
                   <div className="flex items-center space-x-2">
-                    <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    <svg
+                      className="h-5 w-5 text-green-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span className="text-sm font-medium text-gray-700">
                       Secure & Encrypted Payment
                     </span>
                   </div>
                   <p className="mt-2 text-xs text-gray-500">
-                    Your payment information is secure and encrypted. We never store your card details.
+                    Your payment information is secure and encrypted. We never
+                    store your card details.
                   </p>
                 </div>
               </div>
@@ -677,12 +705,22 @@ export default function CheckoutPage() {
 
               {/* Place Order Button */}
               <div className="rounded-lg bg-white p-6 shadow-md">
-              <div className="mt-6">
-                  <div className="flex text-sm text-gray-500 space-x-2">
-                 <input type="checkbox" name="termsAndConditions" id="termsAndConditions" required />
-                    <span>accept our <Link href="/terms" className="text-blue-500">terms and conditions</Link></span>
+                <div className="mt-6">
+                  <div className="flex space-x-2 text-sm text-gray-500">
+                    <input
+                      type="checkbox"
+                      name="termsAndConditions"
+                      id="termsAndConditions"
+                      required
+                    />
+                    <span>
+                      accept our{' '}
+                      <Link href="/terms" className="text-blue-500">
+                        terms and conditions
+                      </Link>
+                    </span>
                   </div>
-                  </div>
+                </div>
                 <Button
                   type="submit"
                   disabled={isProcessing}
@@ -698,10 +736,9 @@ export default function CheckoutPage() {
 
                 <p className="mt-3 text-center text-xs text-gray-500">
                   By placing this order, you agree to our terms and conditions.
-                  {paymentMethod === 'razorpay' 
+                  {paymentMethod === 'razorpay'
                     ? ' Payment will be processed securely via Razorpay.'
-                    : ' You will be redirected to WhatsApp to complete the payment.'
-                  }
+                    : ' You will be redirected to WhatsApp to complete the payment.'}
                 </p>
               </div>
             </div>

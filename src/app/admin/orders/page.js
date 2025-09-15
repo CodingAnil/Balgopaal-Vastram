@@ -8,29 +8,34 @@ import { Toaster } from 'react-hot-toast'
 export default function AdminOrdersPage() {
   const [password, setPassword] = useState('')
   const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(false)     
+  const [loading, setLoading] = useState(false)
   const [pagination, setPagination] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState('ALL')
   const [updatingOrder, setUpdatingOrder] = useState(null)
   const router = useRouter()
 
-  const orderStatuses = ['ALL', 'PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED']
+  const orderStatuses = [
+    'ALL',
+    'PENDING',
+    'CONFIRMED',
+    'SHIPPED',
+    'DELIVERED',
+    'CANCELLED',
+  ]
   const paymentStatuses = ['PENDING', 'PAID', 'FAILED', 'REFUNDED']
 
-
   useEffect(() => {
-      fetchOrders(currentPage, statusFilter)
+    fetchOrders(currentPage, statusFilter)
   }, [currentPage, statusFilter])
 
   const fetchOrders = async (page = 1, status = 'ALL') => {
-    
     setLoading(true)
     try {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: '10',
-        ...(status !== 'ALL' && { status })
+        ...(status !== 'ALL' && { status }),
       })
 
       const response = await fetch(`/api/admin/orders?${params}`)
@@ -63,7 +68,7 @@ export default function AdminOrdersPage() {
           orderId,
           status,
           paymentStatus,
-        })
+        }),
       })
 
       const data = await response.json()
@@ -102,53 +107,57 @@ export default function AdminOrdersPage() {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
   }
 
   const getStatusBadgeClass = (status) => {
     const statusClasses = {
-      'PENDING': 'bg-yellow-100 text-yellow-800',
-      'CONFIRMED': 'bg-blue-100 text-blue-800',
-      'SHIPPED': 'bg-purple-100 text-purple-800',
-      'DELIVERED': 'bg-green-100 text-green-800',
-      'CANCELLED': 'bg-red-100 text-red-800'
+      PENDING: 'bg-yellow-100 text-yellow-800',
+      CONFIRMED: 'bg-blue-100 text-blue-800',
+      SHIPPED: 'bg-purple-100 text-purple-800',
+      DELIVERED: 'bg-green-100 text-green-800',
+      CANCELLED: 'bg-red-100 text-red-800',
     }
     return statusClasses[status] || 'bg-gray-100 text-gray-800'
   }
 
   const getPaymentStatusBadgeClass = (status) => {
     const statusClasses = {
-      'PENDING': 'bg-yellow-100 text-yellow-800',
-      'PAID': 'bg-green-100 text-green-800',
-      'FAILED': 'bg-red-100 text-red-800',
-      'REFUNDED': 'bg-purple-100 text-purple-800'
+      PENDING: 'bg-yellow-100 text-yellow-800',
+      PAID: 'bg-green-100 text-green-800',
+      FAILED: 'bg-red-100 text-red-800',
+      REFUNDED: 'bg-purple-100 text-purple-800',
     }
     return statusClasses[status] || 'bg-gray-100 text-gray-800'
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         {/* Header */}
-        <div className="bg-white shadow rounded-lg mb-8">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <div className="mb-8 rounded-lg bg-white shadow">
+          <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Orders Management</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Orders Management
+              </h1>
               <p className="text-sm text-gray-600">
-                {pagination ? `${pagination.totalOrders} total orders` : 'Loading orders...'}
+                {pagination
+                  ? `${pagination.totalOrders} total orders`
+                  : 'Loading orders...'}
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push('/admin')}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                className="rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
               >
                 Back to Admin
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                className="rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
               >
                 Logout
               </button>
@@ -157,27 +166,31 @@ export default function AdminOrdersPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white shadow rounded-lg mb-6 p-6">
+        <div className="mb-6 rounded-lg bg-white p-6 shadow">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
+              <label className="text-sm font-medium text-gray-700">
+                Filter by Status:
+              </label>
               <select
                 value={statusFilter}
                 onChange={(e) => {
                   setStatusFilter(e.target.value)
                   setCurrentPage(1)
                 }}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                className="rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
               >
-                {orderStatuses.map(status => (
-                  <option key={status} value={status}>{status}</option>
+                {orderStatuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
                 ))}
               </select>
             </div>
             <button
               onClick={() => fetchOrders(currentPage, statusFilter)}
               disabled={loading}
-              className="px-4 py-2 text-sm font-medium text-white bg-peacock-600 border border-transparent rounded-md hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-md border border-transparent bg-peacock-600 px-4 py-2 text-sm font-medium text-white hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? 'Refreshing...' : 'Refresh'}
             </button>
@@ -185,7 +198,7 @@ export default function AdminOrdersPage() {
         </div>
 
         {/* Orders Table */}
-        <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="overflow-hidden rounded-lg bg-white shadow">
           {loading ? (
             <div className="p-8 text-center">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-peacock-600 border-r-transparent"></div>
@@ -200,54 +213,66 @@ export default function AdminOrdersPage() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Order ID
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Customer
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Products
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Total
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Payment
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Date
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 bg-white">
                   {orders.map((order) => (
                     <tr key={order.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="whitespace-nowrap px-6 py-4">
                         <div className="text-sm font-medium text-gray-900">
                           {order.orderId}
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
-                          <div className="font-medium">{order.user?.name || 'N/A'}</div>
-                          <div className="text-gray-500">{order.user?.email || 'N/A'}</div>
-                          <div className="text-gray-500">{order.user?.phone || 'N/A'}</div>
+                          <div className="font-medium">
+                            {order.user?.name || 'N/A'}
+                          </div>
+                          <div className="text-gray-500">
+                            {order.user?.email || 'N/A'}
+                          </div>
+                          <div className="text-gray-500">
+                            {order.user?.phone || 'N/A'}
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="space-y-2">
                           {order.items.slice(0, 2).map((item) => (
-                            <div key={item.id} className="flex items-center space-x-3">
+                            <div
+                              key={item.id}
+                              className="flex items-center space-x-3"
+                            >
                               <div className="h-10 w-10 flex-shrink-0">
                                 <img
-                                  src={item.product?.images?.[0] || '/placeholder.jpg'}
+                                  src={
+                                    item.product?.images?.[0] ||
+                                    '/placeholder.jpg'
+                                  }
                                   alt={item.name}
                                   className="h-10 w-10 rounded-lg object-cover"
                                   onError={(e) => {
@@ -256,11 +281,12 @@ export default function AdminOrdersPage() {
                                 />
                               </div>
                               <div className="min-w-0">
-                                <div className="text-sm font-medium text-gray-900 truncate">
+                                <div className="truncate text-sm font-medium text-gray-900">
                                   {item.name}
                                 </div>
                                 <div className="text-xs text-gray-500">
-                                  Qty: {item.quantity} × {formatPrice(item.price)}
+                                  Qty: {item.quantity} ×{' '}
+                                  {formatPrice(item.price)}
                                 </div>
                               </div>
                             </div>
@@ -272,7 +298,7 @@ export default function AdminOrdersPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="whitespace-nowrap px-6 py-4">
                         <div className="text-sm font-medium text-gray-900">
                           {formatPrice(order.total)}
                         </div>
@@ -280,28 +306,46 @@ export default function AdminOrdersPage() {
                           Subtotal: {formatPrice(order.subtotal)}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="whitespace-nowrap px-6 py-4">
                         <select
                           value={order.status}
-                          onChange={(e) => updateOrderStatus(order.orderId, e.target.value, order.paymentStatus)}
+                          onChange={(e) =>
+                            updateOrderStatus(
+                              order.orderId,
+                              e.target.value,
+                              order.paymentStatus
+                            )
+                          }
                           disabled={updatingOrder === order.orderId}
-                          className={`text-xs font-semibold px-2 py-1 rounded-full border-0 ${getStatusBadgeClass(order.status)} focus:outline-none focus:ring-2 focus:ring-peacock-500`}
+                          className={`rounded-full border-0 px-2 py-1 text-xs font-semibold ${getStatusBadgeClass(order.status)} focus:outline-none focus:ring-2 focus:ring-peacock-500`}
                         >
-                          {orderStatuses.filter(s => s !== 'ALL').map(status => (
-                            <option key={status} value={status}>{status}</option>
-                          ))}
+                          {orderStatuses
+                            .filter((s) => s !== 'ALL')
+                            .map((status) => (
+                              <option key={status} value={status}>
+                                {status}
+                              </option>
+                            ))}
                         </select>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="whitespace-nowrap px-6 py-4">
                         <div className="space-y-1">
                           <select
                             value={order.paymentStatus}
-                            onChange={(e) => updateOrderStatus(order.orderId, order.status, e.target.value)}
+                            onChange={(e) =>
+                              updateOrderStatus(
+                                order.orderId,
+                                order.status,
+                                e.target.value
+                              )
+                            }
                             disabled={updatingOrder === order.orderId}
-                            className={`text-xs font-semibold px-2 py-1 rounded-full border-0 ${getPaymentStatusBadgeClass(order.paymentStatus)} focus:outline-none focus:ring-2 focus:ring-peacock-500`}
+                            className={`rounded-full border-0 px-2 py-1 text-xs font-semibold ${getPaymentStatusBadgeClass(order.paymentStatus)} focus:outline-none focus:ring-2 focus:ring-peacock-500`}
                           >
-                            {paymentStatuses.map(status => (
-                              <option key={status} value={status}>{status}</option>
+                            {paymentStatuses.map((status) => (
+                              <option key={status} value={status}>
+                                {status}
+                              </option>
                             ))}
                           </select>
                           <div className="text-xs text-gray-500">
@@ -309,13 +353,15 @@ export default function AdminOrdersPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                         {formatDate(order.createdAt)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                         <button
-                          onClick={() => router.push(`/orders/${order.orderId}`)}
-                          className="text-peacock-600 hover:text-peacock-900 font-medium"
+                          onClick={() =>
+                            router.push(`/orders/${order.orderId}`)
+                          }
+                          className="font-medium text-peacock-600 hover:text-peacock-900"
                         >
                           View Details
                         </button>
@@ -329,44 +375,50 @@ export default function AdminOrdersPage() {
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+            <div className="border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
               <div className="flex items-center justify-between">
-                <div className="flex-1 flex justify-between sm:hidden">
+                <div className="flex flex-1 justify-between sm:hidden">
                   <button
                     onClick={() => setCurrentPage(currentPage - 1)}
                     disabled={!pagination.hasPrev}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setCurrentPage(currentPage + 1)}
                     disabled={!pagination.hasNext}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Next
                   </button>
                 </div>
-                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm text-gray-700">
-                      Showing page <span className="font-medium">{pagination.currentPage}</span> of{' '}
-                      <span className="font-medium">{pagination.totalPages}</span>
+                      Showing page{' '}
+                      <span className="font-medium">
+                        {pagination.currentPage}
+                      </span>{' '}
+                      of{' '}
+                      <span className="font-medium">
+                        {pagination.totalPages}
+                      </span>
                     </p>
                   </div>
                   <div>
-                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                    <nav className="relative z-0 inline-flex -space-x-px rounded-md shadow-sm">
                       <button
                         onClick={() => setCurrentPage(currentPage - 1)}
                         disabled={!pagination.hasPrev}
-                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Previous
                       </button>
                       <button
                         onClick={() => setCurrentPage(currentPage + 1)}
                         disabled={!pagination.hasNext}
-                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Next
                       </button>

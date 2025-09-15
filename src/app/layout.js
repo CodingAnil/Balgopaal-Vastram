@@ -3,7 +3,7 @@ import '../styles/globals.css'
 import Header from '@/components/ui/header'
 import Footer from '@/components/ui/footer'
 import SizeGuideModal from '@/components/ui/size-guide-modal'
-import { Toaster } from "react-hot-toast";
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -78,19 +78,20 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className} antialiased`}>
         <div className="flex min-h-screen flex-col">
           <Header />
-          <main className="flex-1 pt-20">{children}
-          <Toaster
-          position="top-right"
-          toastOptions={{
-            className: "",
-            style: {
-              background: "transparent",
-              padding: 0,
-              margin: 0,
-              boxShadow: "none",
-            },
-          }}
-        />
+          <main className="flex-1 pt-20">
+            {children}
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                className: '',
+                style: {
+                  background: 'transparent',
+                  padding: 0,
+                  margin: 0,
+                  boxShadow: 'none',
+                },
+              }}
+            />
           </main>
           <Footer />
           <SizeGuideModal />

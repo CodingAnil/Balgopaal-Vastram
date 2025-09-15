@@ -13,7 +13,7 @@ export default function AddProductForm({ onClose, onSuccess }) {
     size: '0',
     image: '',
     originalPrice: '',
-    discount: '0'
+    discount: '0',
   })
   const [loading, setLoading] = useState(false)
   const [adminPassword, setAdminPassword] = useState('')
@@ -23,21 +23,27 @@ export default function AddProductForm({ onClose, onSuccess }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (!adminPassword) {
       toast.error('Please enter admin password')
       return
     }
 
-    if (!formData.name || !formData.description || !formData.price || !formData.color || !formData.image) {
+    if (
+      !formData.name ||
+      !formData.description ||
+      !formData.price ||
+      !formData.color ||
+      !formData.image
+    ) {
       toast.error('Please fill in all required fields')
       return
     }
@@ -47,12 +53,19 @@ export default function AddProductForm({ onClose, onSuccess }) {
       return
     }
 
-    if (formData.originalPrice && (isNaN(formData.originalPrice) || parseFloat(formData.originalPrice) <= 0)) {
+    if (
+      formData.originalPrice &&
+      (isNaN(formData.originalPrice) || parseFloat(formData.originalPrice) <= 0)
+    ) {
       toast.error('Please enter a valid original price')
       return
     }
 
-    if (isNaN(formData.discount) || parseFloat(formData.discount) < 0 || parseFloat(formData.discount) > 100) {
+    if (
+      isNaN(formData.discount) ||
+      parseFloat(formData.discount) < 0 ||
+      parseFloat(formData.discount) > 100
+    ) {
       toast.error('Discount must be between 0 and 100')
       return
     }
@@ -69,8 +82,10 @@ export default function AddProductForm({ onClose, onSuccess }) {
           ...formData,
           adminPassword,
           price: parseFloat(formData.price),
-          originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : undefined,
-          discount: parseFloat(formData.discount)
+          originalPrice: formData.originalPrice
+            ? parseFloat(formData.originalPrice)
+            : undefined,
+          discount: parseFloat(formData.discount),
         }),
       })
 
@@ -90,7 +105,7 @@ export default function AddProductForm({ onClose, onSuccess }) {
           size: '0',
           image: '',
           originalPrice: '',
-          discount: '0'
+          discount: '0',
         })
         setAdminPassword('')
       } else {
@@ -106,24 +121,37 @@ export default function AddProductForm({ onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl">
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white shadow-xl">
+        <div className="sticky top-0 flex items-center justify-between border-b bg-white px-6 py-4">
           <h2 className="text-2xl font-bold text-gray-900">Add New Product</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="rounded-full p-2 transition-colors hover:bg-gray-100"
             disabled={loading}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 p-6">
           {/* Admin Password */}
           <div>
-            <label htmlFor="adminPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="adminPassword"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Admin Password <span className="text-red-500">*</span>
             </label>
             <input
@@ -131,7 +159,7 @@ export default function AddProductForm({ onClose, onSuccess }) {
               id="adminPassword"
               value={adminPassword}
               onChange={(e) => setAdminPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
               placeholder="Enter admin password"
               required
               disabled={loading}
@@ -140,7 +168,10 @@ export default function AddProductForm({ onClose, onSuccess }) {
 
           {/* Product Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="name"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Product Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -149,7 +180,7 @@ export default function AddProductForm({ onClose, onSuccess }) {
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
               placeholder="Enter product name"
               required
               disabled={loading}
@@ -158,7 +189,10 @@ export default function AddProductForm({ onClose, onSuccess }) {
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="description"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -167,7 +201,7 @@ export default function AddProductForm({ onClose, onSuccess }) {
               value={formData.description}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
               placeholder="Enter product description"
               required
               disabled={loading}
@@ -175,9 +209,12 @@ export default function AddProductForm({ onClose, onSuccess }) {
           </div>
 
           {/* Price and Original Price */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="price"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Price (₹) <span className="text-red-500">*</span>
               </label>
               <input
@@ -188,14 +225,17 @@ export default function AddProductForm({ onClose, onSuccess }) {
                 onChange={handleInputChange}
                 min="0"
                 step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                 placeholder="0.00"
                 required
                 disabled={loading}
               />
             </div>
             <div>
-              <label htmlFor="originalPrice" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="originalPrice"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Original Price (₹)
               </label>
               <input
@@ -206,13 +246,16 @@ export default function AddProductForm({ onClose, onSuccess }) {
                 onChange={handleInputChange}
                 min="0"
                 step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                 placeholder="0.00"
                 disabled={loading}
               />
             </div>
             <div>
-              <label htmlFor="discount" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="discount"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Discount (%)
               </label>
               <input
@@ -223,7 +266,7 @@ export default function AddProductForm({ onClose, onSuccess }) {
                 onChange={handleInputChange}
                 min="0"
                 max="100"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                 placeholder="0"
                 disabled={loading}
               />
@@ -231,9 +274,12 @@ export default function AddProductForm({ onClose, onSuccess }) {
           </div>
 
           {/* Category and Size */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="category"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Category <span className="text-red-500">*</span>
               </label>
               <select
@@ -241,17 +287,22 @@ export default function AddProductForm({ onClose, onSuccess }) {
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                 required
                 disabled={loading}
               >
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
                 ))}
               </select>
             </div>
             <div>
-              <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="size"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Size <span className="text-red-500">*</span>
               </label>
               <select
@@ -259,12 +310,14 @@ export default function AddProductForm({ onClose, onSuccess }) {
                 name="size"
                 value={formData.size}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                 required
                 disabled={loading}
               >
-                {sizes.map(size => (
-                  <option key={size} value={size}>Size {size}</option>
+                {sizes.map((size) => (
+                  <option key={size} value={size}>
+                    Size {size}
+                  </option>
                 ))}
               </select>
             </div>
@@ -272,7 +325,10 @@ export default function AddProductForm({ onClose, onSuccess }) {
 
           {/* Color */}
           <div>
-            <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="color"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Color <span className="text-red-500">*</span>
             </label>
             <input
@@ -281,7 +337,7 @@ export default function AddProductForm({ onClose, onSuccess }) {
               name="color"
               value={formData.color}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
               placeholder="Enter product color"
               required
               disabled={loading}
@@ -290,7 +346,10 @@ export default function AddProductForm({ onClose, onSuccess }) {
 
           {/* Image URL */}
           <div>
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="image"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Image URL <span className="text-red-500">*</span>
             </label>
             <input
@@ -299,7 +358,7 @@ export default function AddProductForm({ onClose, onSuccess }) {
               name="image"
               value={formData.image}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
               placeholder="https://example.com/image.jpg"
               required
               disabled={loading}
@@ -311,14 +370,14 @@ export default function AddProductForm({ onClose, onSuccess }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+              className="rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
               disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-peacock-600 border border-transparent rounded-md hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="rounded-md border border-transparent bg-peacock-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={loading}
             >
               {loading ? 'Adding Product...' : 'Add Product'}

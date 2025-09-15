@@ -18,7 +18,7 @@ export default function AboutPage() {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault()
-    
+
     try {
       const response = await fetch('/api/admin/auth', {
         method: 'POST',
@@ -33,20 +33,20 @@ export default function AboutPage() {
       if (response.ok) {
         setShowPasswordModal(false)
         setShowAddProductForm(true)
-          showToast('Welcome Admin!','success')
+        showToast('Welcome Admin!', 'success')
       } else {
-        showToast(data.error || 'Invalid admin password','error')
+        showToast(data.error || 'Invalid admin password', 'error')
         setAdminPassword('')
       }
     } catch (error) {
       console.error('Authentication error:', error)
-      showToast('Authentication failed. Please try again.','error')
+      showToast('Authentication failed. Please try again.', 'error')
       setAdminPassword('')
     }
   }
 
   const handleProductAdded = (product) => {
-    showToast(`Product "${product.name}" added successfully!`,`success`)
+    showToast(`Product "${product.name}" added successfully!`, `success`)
   }
 
   return (
@@ -59,8 +59,8 @@ export default function AboutPage() {
               About Balgopaal Vastram
             </h1>
             <p className="mx-auto max-w-3xl text-xl opacity-90 md:text-2xl">
-              Devotional wear for Laddu Gopal - Handcrafted with love in
-              Haryana (India)
+              Devotional wear for Laddu Gopal - Handcrafted with love in Haryana
+              (India)
             </p>
           </div>
         </div>
@@ -80,8 +80,8 @@ export default function AboutPage() {
                   Balgopaal Vastram was born from a deep devotion to Lord
                   Krishna and a passion for creating beautiful, authentic
                   devotional wear for Laddu Gopal. Based in the sacred city of
-                  fatehabad, Haryana, we have been serving devotees across India with
-                  handcrafted vastra, mukut, and bansuri for over a decade.
+                  fatehabad, Haryana, we have been serving devotees across India
+                  with handcrafted vastra, mukut, and bansuri for over a decade.
                 </p>
                 <p>
                   Our journey began when our founder, a lifelong devotee of
@@ -104,10 +104,14 @@ export default function AboutPage() {
                 <div className="text-center text-white">
                   <div className="mx-auto mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-white/20">
                     <span className="text-6xl">
-                      <img src="/hero/standkrishna.jpg" alt="Laddu Gopal" className="w-full h-full object-cover rounded-full" />
+                      <img
+                        src="/hero/standkrishna.jpg"
+                        alt="Laddu Gopal"
+                        className="h-full w-full rounded-full object-cover"
+                      />
                     </span>
                   </div>
-                    <h3 className="text-2xl font-bold">Made in Haryana</h3>
+                  <h3 className="text-2xl font-bold">Made in Haryana</h3>
                   <p className="text-white/90">The Sacred City of Krishna</p>
                 </div>
               </div>
@@ -382,22 +386,37 @@ export default function AboutPage() {
       {/* Admin Password Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl">
+          <div className="w-full max-w-md rounded-lg bg-white shadow-xl">
             <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Admin Access</h3>
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Admin Access
+                </h3>
                 <button
                   onClick={() => setShowPasswordModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="rounded-full p-2 transition-colors hover:bg-gray-100"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
               <form onSubmit={handlePasswordSubmit}>
                 <div className="mb-4">
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
                     Enter Admin Password
                   </label>
                   <input
@@ -405,7 +424,7 @@ export default function AboutPage() {
                     id="password"
                     value={adminPassword}
                     onChange={(e) => setAdminPassword(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:border-transparent"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-peacock-500"
                     placeholder="Enter password"
                     required
                     autoFocus
@@ -415,13 +434,13 @@ export default function AboutPage() {
                   <button
                     type="button"
                     onClick={() => setShowPasswordModal(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                    className="rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 text-sm font-medium text-white bg-peacock-600 border border-transparent rounded-md hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2 transition-colors"
+                    className="rounded-md border border-transparent bg-peacock-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2"
                   >
                     Access Admin
                   </button>

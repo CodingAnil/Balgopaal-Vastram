@@ -15,42 +15,45 @@ export default function ProductCard({ product, setFavorites }) {
   const router = useRouter()
   // Check if product is favorited on mount and listen for changes
   useEffect(() => {
-    console.log(product,"product id")
+    console.log(product, 'product id')
     const checkFavoriteStatus = () => {
       setIsFavorited(isFavorite(product.id || product._id))
     }
-    
+
     checkFavoriteStatus()
-    
+
     // Listen for favorite changes across the app
     const handleFavoriteChange = (e) => {
-      if (e.detail && (e.detail.productId === product.id || e.detail.productId === product._id)) {
+      if (
+        e.detail &&
+        (e.detail.productId === product.id ||
+          e.detail.productId === product._id)
+      ) {
         checkFavoriteStatus()
       }
     }
-    
+
     window.addEventListener('favoriteChanged', handleFavoriteChange)
-    
+
     return () => {
       window.removeEventListener('favoriteChanged', handleFavoriteChange)
     }
   }, [product.id, product._id])
 
- 
-
-
   const handleAddToCart = async () => {
-    if(isAddingToCart) {
+    if (isAddingToCart) {
       router.push('/cart')
       return
     }
     setIsAddingToCart(true)
     try {
-      const selectedSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : null
-      const selectedColor = product.colors && product.colors.length > 0 ? product.colors[0] : null
+      const selectedSize =
+        product.sizes && product.sizes.length > 0 ? product.sizes[0] : null
+      const selectedColor =
+        product.colors && product.colors.length > 0 ? product.colors[0] : null
 
       addToCart(product, selectedSize, selectedColor, 1)
-      showToast('Added to cart','success')
+      showToast('Added to cart', 'success')
     } catch (error) {
       console.error('Error adding to cart:', error)
     } finally {
@@ -62,21 +65,23 @@ export default function ProductCard({ product, setFavorites }) {
     const productId = product.id || product._id
     const newFavorites = toggleFavorite(product)
     const wasAdded = !isFavorited
-    
-    if(wasAdded) {
-      showToast('Added to favorites','success')
+
+    if (wasAdded) {
+      showToast('Added to favorites', 'success')
     } else {
-      showToast('Removed from favorites','info')
+      showToast('Removed from favorites', 'info')
     }
-    
+
     setIsFavorited(wasAdded)
-    
+
     // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('favoriteChanged', {
-      detail: { productId, wasAdded }
-    }))
-    
-    if(setFavorites) {
+    window.dispatchEvent(
+      new CustomEvent('favoriteChanged', {
+        detail: { productId, wasAdded },
+      })
+    )
+
+    if (setFavorites) {
       setFavorites(newFavorites)
     }
   }
@@ -101,23 +106,23 @@ export default function ProductCard({ product, setFavorites }) {
   const getColorValue = (colorId) => {
     // Default color mappings for common colors
     const colorMap = {
-      'red': '#dc2626',
-      'blue': '#2563eb',
-      'green': '#16a34a',
-      'yellow': '#eab308',
-      'orange': '#ea580c',
-      'purple': '#9333ea',
-      'pink': '#ec4899',
-      'black': '#000000',
-      'white': '#ffffff',
-      'gray': '#6b7280',
-      'gold': '#fbbf24',
-      'silver': '#9ca3af',
-      'brown': '#92400e',
-      'peacock': '#16a34a',
-      'copper': '#f2760b'
+      red: '#dc2626',
+      blue: '#2563eb',
+      green: '#16a34a',
+      yellow: '#eab308',
+      orange: '#ea580c',
+      purple: '#9333ea',
+      pink: '#ec4899',
+      black: '#000000',
+      white: '#ffffff',
+      gray: '#6b7280',
+      gold: '#fbbf24',
+      silver: '#9ca3af',
+      brown: '#92400e',
+      peacock: '#16a34a',
+      copper: '#f2760b',
     }
-    
+
     // Try to find the color or return a default
     const lowerColorId = colorId.toLowerCase()
     for (const [key, value] of Object.entries(colorMap)) {
@@ -125,10 +130,9 @@ export default function ProductCard({ product, setFavorites }) {
         return value
       }
     }
-    
+
     return '#6b7280' // Default gray
   }
-
 
   return (
     <div className="group overflow-hidden rounded-lg bg-white shadow-md transition-all duration-300 hover:shadow-xl">
@@ -136,7 +140,12 @@ export default function ProductCard({ product, setFavorites }) {
       <div className="relative aspect-square overflow-hidden">
         <Link href={`/products/${product.slug}`}>
           <img
-            src={(product?.image) || (product?.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg')}
+            src={
+              product?.image ||
+              (product?.images && product.images.length > 0
+                ? product.images[0]
+                : '/placeholder.jpg')
+            }
             alt={product.name || 'Product Image'}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             onError={(e) => {
@@ -249,27 +258,31 @@ export default function ProductCard({ product, setFavorites }) {
         <div className="mb-4 flex items-center space-x-2">
           <span className="text-sm text-gray-600">Colors:</span>
           <div className="flex space-x-1">
-            {product.colors && product.colors.slice(0, 3).map((colorId) => {
-              const color = siteConfig.colors.find((c) => c.id === colorId)
-              const colorValue = color ? color.value : getColorValue(colorId)
-              const colorName = color ? color.name : colorId.charAt(0).toUpperCase() + colorId.slice(1).replace('-', ' ')
-              
-              return (
-                <div
-                  key={colorId}
-                  className="h-4 w-4 rounded-full border border-gray-300"
-                  style={{ backgroundColor: colorValue }}
-                  title={colorName}
-                />
-              )
-            })}
+            {product.colors &&
+              product.colors.slice(0, 3).map((colorId) => {
+                const color = siteConfig.colors.find((c) => c.id === colorId)
+                const colorValue = color ? color.value : getColorValue(colorId)
+                const colorName = color
+                  ? color.name
+                  : colorId.charAt(0).toUpperCase() +
+                    colorId.slice(1).replace('-', ' ')
+
+                return (
+                  <div
+                    key={colorId}
+                    className="h-4 w-4 rounded-full border border-gray-300"
+                    style={{ backgroundColor: colorValue }}
+                    title={colorName}
+                  />
+                )
+              })}
             {product.colors && product.colors.length > 3 && (
               <span className="text-xs text-gray-500">
                 +{product.colors.length - 3}
               </span>
             )}
           </div>
-        </div>  
+        </div>
 
         {/* Add to Cart Button */}
         <Button

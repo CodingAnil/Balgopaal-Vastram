@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { slides, perfectFor } from '@/lib/webContent/hero'
 
-
 export default function HeroSlider() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
@@ -74,7 +73,6 @@ export default function HeroSlider() {
                         {slide.description}
                       </p>
                     </div>
-
                     Color Swatches
                     {/* <div className="flex space-x-3">
                       {slide.colors.map((color, colorIndex) => (
@@ -85,7 +83,6 @@ export default function HeroSlider() {
                         ></div>
                       ))}
                     </div> */}
-
                     {/* CTA Button */}
                     {/* <div className="pt-4">
                       <Link href={slide.ctaLink}>
@@ -112,7 +109,6 @@ export default function HeroSlider() {
                             Peacock Mukut
                           </h3>
                         </div>
-    
                       </div>
                       <div className="space-y-4">
                         <div className="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
@@ -120,10 +116,9 @@ export default function HeroSlider() {
                             <span className="text-xl text-white">🌿</span>
                           </div>
                           <h3 className="font-semibold text-white">
-                          Natural Dress
+                            Natural Dress
                           </h3>
                         </div>
-            
                       </div>
                     </div>
 

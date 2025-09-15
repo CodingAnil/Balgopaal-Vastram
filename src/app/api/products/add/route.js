@@ -2,28 +2,37 @@ import { NextResponse } from 'next/server'
 import connectDB from '@/lib/db'
 import Product from '@/lib/models/Product'
 
-
 export async function POST(request) {
   try {
     const body = await request.json()
-    const { 
-      name, 
-      description, 
-      price, 
-      category, 
-      colors, 
-      sizes, 
+    const {
+      name,
+      description,
+      price,
+      category,
+      colors,
+      sizes,
       images,
       features,
       originalPrice,
-      discount = 0
+      discount = 0,
     } = body
 
-
     // Basic validation
-    if (!name || !description || !price || !category || !colors || !sizes || !images) {
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !category ||
+      !colors ||
+      !sizes ||
+      !images
+    ) {
       return NextResponse.json(
-        { error: 'All required fields must be provided: name, description, price, category, colors, sizes, images' },
+        {
+          error:
+            'All required fields must be provided: name, description, price, category, colors, sizes, images',
+        },
         { status: 400 }
       )
     }
@@ -61,10 +70,12 @@ export async function POST(request) {
 
     // Validate sizes
     const validSizes = ['0', '1', '2', '3', '4', '5', '6']
-    const invalidSizes = sizes.filter(size => !validSizes.includes(size))
+    const invalidSizes = sizes.filter((size) => !validSizes.includes(size))
     if (invalidSizes.length > 0) {
       return NextResponse.json(
-        { error: `Invalid sizes: ${invalidSizes.join(', ')}. Valid sizes are: ${validSizes.join(', ')}` },
+        {
+          error: `Invalid sizes: ${invalidSizes.join(', ')}. Valid sizes are: ${validSizes.join(', ')}`,
+        },
         { status: 400 }
       )
     }
@@ -78,7 +89,9 @@ export async function POST(request) {
     }
 
     // Validate colors and images are not empty
-    const emptyColors = colors.filter(color => !color || color.trim().length === 0)
+    const emptyColors = colors.filter(
+      (color) => !color || color.trim().length === 0
+    )
     if (emptyColors.length > 0) {
       return NextResponse.json(
         { error: 'All colors must be non-empty strings' },
@@ -86,7 +99,9 @@ export async function POST(request) {
       )
     }
 
-    const emptyImages = images.filter(image => !image || image.trim().length === 0)
+    const emptyImages = images.filter(
+      (image) => !image || image.trim().length === 0
+    )
     if (emptyImages.length > 0) {
       return NextResponse.json(
         { error: 'All image URLs must be non-empty strings' },
@@ -96,7 +111,9 @@ export async function POST(request) {
 
     // Validate features if provided
     if (features && Array.isArray(features)) {
-      const emptyFeatures = features.filter(feature => !feature || feature.trim().length === 0)
+      const emptyFeatures = features.filter(
+        (feature) => !feature || feature.trim().length === 0
+      )
       if (emptyFeatures.length > 0) {
         return NextResponse.json(
           { error: 'All features must be non-empty strings' },
@@ -113,13 +130,16 @@ export async function POST(request) {
       description: description.trim(),
       price: parseFloat(price),
       category: category.toUpperCase(),
-      colors: colors.map(color => color.trim()),
+      colors: colors.map((color) => color.trim()),
       sizes: sizes,
-      images: images.map(image => image.trim()),
-      features: features && Array.isArray(features) ? features.map(feature => feature.trim()) : [],
+      images: images.map((image) => image.trim()),
+      features:
+        features && Array.isArray(features)
+          ? features.map((feature) => feature.trim())
+          : [],
       discount: parseFloat(discount) || 0,
       // Keep backwards compatibility with single color field for existing components
-      color: colors[0].trim()
+      color: colors[0].trim(),
     }
 
     if (originalPrice && !isNaN(originalPrice) && originalPrice > 0) {
@@ -129,29 +149,31 @@ export async function POST(request) {
     const product = new Product(productData)
     await product.save()
 
-    return NextResponse.json({
-      success: true,
-      message: 'Product added successfully',
-      product: {
-        id: product._id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        category: product.category,
-        colors: product.colors,
-        sizes: product.sizes,
-        images: product.images,
-        features: product.features,
-        slug: product.slug,
-        discount: product.discount,
-        originalPrice: product.originalPrice,
-        createdAt: product.createdAt
-      }
-    }, { status: 201 })
-
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Product added successfully',
+        product: {
+          id: product._id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          category: product.category,
+          colors: product.colors,
+          sizes: product.sizes,
+          images: product.images,
+          features: product.features,
+          slug: product.slug,
+          discount: product.discount,
+          originalPrice: product.originalPrice,
+          createdAt: product.createdAt,
+        },
+      },
+      { status: 201 }
+    )
   } catch (error) {
     console.error('Add product error:', error)
-    
+
     // Handle duplicate key error (if name/slug is not unique)
     if (error.code === 11000) {
       return NextResponse.json(
@@ -162,7 +184,7 @@ export async function POST(request) {
 
     // Handle validation errors
     if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(err => err.message)
+      const messages = Object.values(error.errors).map((err) => err.message)
       return NextResponse.json(
         { error: 'Validation failed', details: messages },
         { status: 400 }
@@ -170,9 +192,9 @@ export async function POST(request) {
     }
 
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to add product',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

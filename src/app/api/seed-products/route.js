@@ -7,7 +7,8 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 const sampleProducts = [
   {
     name: 'Golden Peacock Feather Mukut',
-    description: 'Beautiful golden mukut adorned with real peacock feathers, perfect for divine occasions. Handcrafted with traditional techniques.',
+    description:
+      'Beautiful golden mukut adorned with real peacock feathers, perfect for divine occasions. Handcrafted with traditional techniques.',
     price: 1200,
     originalPrice: 1500,
     category: 'MUKUT',
@@ -19,15 +20,16 @@ const sampleProducts = [
       'Golden finish coating',
       'Traditional craftsmanship',
       'Lightweight design',
-      'Perfect for festivals'
+      'Perfect for festivals',
     ],
     isFavorite: true,
     inStock: true,
-    discount: 20
+    discount: 20,
   },
   {
     name: 'Red Silk Divine Vastra',
-    description: 'Premium red silk vastra with intricate golden embroidery work. Made from finest silk threads for ultimate comfort.',
+    description:
+      'Premium red silk vastra with intricate golden embroidery work. Made from finest silk threads for ultimate comfort.',
     price: 980,
     originalPrice: 1200,
     category: 'VASTRA',
@@ -39,15 +41,16 @@ const sampleProducts = [
       'Hand-embroidered gold work',
       'Traditional motifs',
       'Soft and comfortable',
-      'Easy to maintain'
+      'Easy to maintain',
     ],
     isFavorite: true,
     inStock: true,
-    discount: 18
+    discount: 18,
   },
   {
     name: 'Copper Traditional Bansuri',
-    description: 'Handcrafted copper bansuri flute with excellent sound quality. Perfect for devotional music and meditation.',
+    description:
+      'Handcrafted copper bansuri flute with excellent sound quality. Perfect for devotional music and meditation.',
     price: 650,
     originalPrice: 750,
     category: 'BANSURI',
@@ -59,15 +62,16 @@ const sampleProducts = [
       'Traditional bamboo base',
       'Excellent sound quality',
       'Durable construction',
-      'Perfect tuning'
+      'Perfect tuning',
     ],
     isFavorite: true,
     inStock: true,
-    discount: 13
+    discount: 13,
   },
   {
     name: 'Blue Royal Silk Vastra',
-    description: 'Elegant blue silk vastra representing the divine color of Krishna. Features silver thread embroidery.',
+    description:
+      'Elegant blue silk vastra representing the divine color of Krishna. Features silver thread embroidery.',
     price: 1100,
     originalPrice: 1300,
     category: 'VASTRA',
@@ -79,15 +83,16 @@ const sampleProducts = [
       'Silver thread work',
       'Krishna inspired design',
       'Premium quality',
-      'Comfortable fit'
+      'Comfortable fit',
     ],
     isFavorite: false,
     inStock: true,
-    discount: 15
+    discount: 15,
   },
   {
     name: 'Sacred Crown Mukut Gold',
-    description: 'Luxurious golden crown mukut with intricate patterns and decorative gems. Perfect for special occasions.',
+    description:
+      'Luxurious golden crown mukut with intricate patterns and decorative gems. Perfect for special occasions.',
     price: 1800,
     originalPrice: 2200,
     category: 'MUKUT',
@@ -99,15 +104,16 @@ const sampleProducts = [
       'Decorative gem work',
       'Intricate patterns',
       'Perfect fit',
-      'Festival ready'
+      'Festival ready',
     ],
     isFavorite: true,
     inStock: true,
-    discount: 18
+    discount: 18,
   },
   {
     name: 'Yellow Festive Vastra',
-    description: 'Bright yellow silk vastra perfect for festivals and celebrations. Features golden thread embroidery.',
+    description:
+      'Bright yellow silk vastra perfect for festivals and celebrations. Features golden thread embroidery.',
     price: 850,
     originalPrice: 1000,
     category: 'VASTRA',
@@ -119,12 +125,12 @@ const sampleProducts = [
       'Golden embroidery',
       'Festive design',
       'Soft texture',
-      'Easy care'
+      'Easy care',
     ],
     isFavorite: false,
     inStock: true,
-    discount: 15
-  }
+    discount: 15,
+  },
 ]
 
 export async function POST(request) {
@@ -147,27 +153,26 @@ export async function POST(request) {
 
     // Insert sample products
     const insertedProducts = await Product.insertMany(sampleProducts)
-    
+
     console.log(`Inserted ${insertedProducts.length} sample products`)
 
     return NextResponse.json({
       success: true,
       message: `Successfully seeded ${insertedProducts.length} products`,
-      products: insertedProducts.map(p => ({
+      products: insertedProducts.map((p) => ({
         id: p._id,
         name: p.name,
         category: p.category,
         price: p.price,
-        isFavorite: p.isFavorite
-      }))
+        isFavorite: p.isFavorite,
+      })),
     })
-
   } catch (error) {
     console.error('Seed products error:', error)
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to seed products',
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     )

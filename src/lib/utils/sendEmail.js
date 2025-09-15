@@ -26,14 +26,14 @@ export async function sendOrderEmail(type, orderData) {
     }
 
     let emailData
-    
+
     if (type === 'user') {
       emailData = {
         to: orderData.user.email,
         from: FROM_EMAIL,
         subject: 'Your order has been placed successfully!',
         html: generateUserEmailHTML(orderData),
-        text: generateUserEmailText(orderData)
+        text: generateUserEmailText(orderData),
       }
     } else if (type === 'admin') {
       emailData = {
@@ -41,24 +41,28 @@ export async function sendOrderEmail(type, orderData) {
         from: FROM_EMAIL,
         subject: 'New Order Received - Please Process',
         html: generateAdminEmailHTML(orderData),
-        text: generateAdminEmailText(orderData)
+        text: generateAdminEmailText(orderData),
       }
     } else {
       throw new Error('Invalid email type. Must be "user" or "admin"')
     }
 
     await sgMail.send(emailData)
-    console.log(`${type} email sent successfully for order ${orderData.orderId}`)
+    console.log(
+      `${type} email sent successfully for order ${orderData.orderId}`
+    )
     return true
-
   } catch (error) {
-    console.error(`Failed to send ${type} email for order ${orderData.orderId}:`, error)
-    
+    console.error(
+      `Failed to send ${type} email for order ${orderData.orderId}:`,
+      error
+    )
+
     // Log detailed error for debugging
     if (error.response && error.response.body) {
       console.error('SendGrid error details:', error.response.body)
     }
-    
+
     return false
   }
 }
@@ -79,7 +83,7 @@ function generateUserEmailHTML(orderData) {
     return new Date(dateString).toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     })
   }
 
@@ -167,7 +171,9 @@ function generateUserEmailHTML(orderData) {
               </tr>
             </thead>
             <tbody>
-              ${orderData.items.map(item => `
+              ${orderData.items
+                .map(
+                  (item) => `
                 <tr>
                   <td>${item.name}</td>
                   <td>${item.size}</td>
@@ -176,7 +182,9 @@ function generateUserEmailHTML(orderData) {
                   <td>${formatPrice(item.price)}</td>
                   <td>${formatPrice(item.price * item.quantity)}</td>
                 </tr>
-              `).join('')}
+              `
+                )
+                .join('')}
             </tbody>
           </table>
 
@@ -251,7 +259,7 @@ function generateAdminEmailHTML(orderData) {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
   }
 
@@ -366,7 +374,9 @@ function generateAdminEmailHTML(orderData) {
               </tr>
             </thead>
             <tbody>
-              ${orderData.items.map(item => `
+              ${orderData.items
+                .map(
+                  (item) => `
                 <tr>
                   <td><strong>${item.name}</strong></td>
                   <td>${item.size}</td>
@@ -375,7 +385,9 @@ function generateAdminEmailHTML(orderData) {
                   <td>${formatPrice(item.price)}</td>
                   <td><strong>${formatPrice(item.price * item.quantity)}</strong></td>
                 </tr>
-              `).join('')}
+              `
+                )
+                .join('')}
             </tbody>
           </table>
 
@@ -430,39 +442,39 @@ function generateUserEmailText(orderData) {
   let text = `BALGOPAAL VASTRAM - Order Confirmation\n\n`
   text += `Dear ${orderData.user.name},\n\n`
   text += `Thank you for your order! We're excited to prepare your devotional items for Laddu Gopal.\n\n`
-  
+
   text += `ORDER DETAILS:\n`
   text += `Order ID: ${orderData.orderId}\n`
   text += `Order Date: ${formatDate(orderData.createdAt || orderData.date)}\n`
   text += `Payment Method: ${orderData.paymentMethod || 'Online Payment'}\n`
   text += `Payment Status: Confirmed\n\n`
-  
+
   text += `PRODUCTS ORDERED:\n`
   orderData.items.forEach((item, index) => {
     text += `${index + 1}. ${item.name}\n`
     text += `   Size: ${item.size}, Color: ${item.color}, Quantity: ${item.quantity}\n`
     text += `   Price: ${formatPrice(item.price)} x ${item.quantity} = ${formatPrice(item.price * item.quantity)}\n\n`
   })
-  
+
   text += `ORDER SUMMARY:\n`
   text += `Subtotal: ${formatPrice(orderData.subtotal)}\n`
   text += `Shipping: ${orderData.shipping === 0 ? 'Free' : formatPrice(orderData.shipping)}\n`
   text += `Total Amount: ${formatPrice(orderData.total)}\n\n`
-  
+
   text += `SHIPPING DETAILS:\n`
   text += `Email: ${orderData.user.email}\n`
   text += `Phone: ${orderData.user.phone}\n`
   text += `Address: ${orderData.user.address || `${orderData.user.city}, ${orderData.user.state} - ${orderData.user.pincode}`}\n\n`
-  
+
   text += `Your order will be delivered in a few days. Thank you for shopping with Balgopaal Vastram!\n\n`
-  
+
   text += `CONTACT US:\n`
   text += `Email: support@balgopaalvastram.com\n`
   text += `Phone: +91 82952 73371\n`
   text += `Address: Mathura, Uttar Pradesh, India\n\n`
-  
+
   text += `This is an automated email. Please do not reply to this email.`
-  
+
   return text
 }
 
@@ -484,20 +496,20 @@ function generateAdminEmailText(orderData) {
 
   let text = `NEW ORDER ALERT - ADMIN NOTIFICATION\n\n`
   text += `A new order has been received from customer ${orderData.user.name}.\n\n`
-  
+
   text += `ORDER INFORMATION:\n`
   text += `Order ID: ${orderData.orderId}\n`
   text += `Order Date: ${formatDate(orderData.createdAt || orderData.date)}\n`
   text += `Payment Method: ${orderData.paymentMethod || 'Online Payment'}\n`
   text += `Payment Status: Confirmed\n`
   text += `Total Amount: ${formatPrice(orderData.total)}\n\n`
-  
+
   text += `CUSTOMER DETAILS:\n`
   text += `Name: ${orderData.user.name}\n`
   text += `Email: ${orderData.user.email}\n`
   text += `Phone: ${orderData.user.phone}\n`
   text += `Address: ${orderData.user.address || `${orderData.user.city}, ${orderData.user.state} - ${orderData.user.pincode}`}\n\n`
-  
+
   text += `PRODUCTS ORDERED:\n`
   orderData.items.forEach((item, index) => {
     text += `${index + 1}. ${item.name}\n`
@@ -505,16 +517,16 @@ function generateAdminEmailText(orderData) {
     text += `   Unit Price: ${formatPrice(item.price)}\n`
     text += `   Total: ${formatPrice(item.price * item.quantity)}\n\n`
   })
-  
+
   text += `ORDER SUMMARY:\n`
   text += `Subtotal: ${formatPrice(orderData.subtotal)}\n`
   text += `Shipping: ${orderData.shipping === 0 ? 'Free' : formatPrice(orderData.shipping)}\n`
   text += `Total Amount: ${formatPrice(orderData.total)}\n\n`
-  
+
   text += `ACTION REQUIRED: Please arrange delivery for this order.\n\n`
-  
+
   text += `This is an automated admin notification from Balgopaal Vastram ordering system.`
-  
+
   return text
 }
 

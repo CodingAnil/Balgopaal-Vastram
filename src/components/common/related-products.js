@@ -17,30 +17,32 @@ export default function RelatedProducts({ product }) {
   const fetchRelatedProducts = async () => {
     try {
       setLoading(true)
-      
+
       // First try to get products from the same category
-      const categoryResponse = await fetch(`/api/products?category=${product.category}&limit=8`)
+      const categoryResponse = await fetch(
+        `/api/products?category=${product.category}&limit=8`
+      )
       const categoryData = await categoryResponse.json()
-      
+
       if (categoryData.success && categoryData.products.length > 0) {
         // Filter out the current product and limit to 4
         const filtered = categoryData.products
-          .filter(p => p._id !== product._id && p._id !== product.id)
+          .filter((p) => p._id !== product._id && p._id !== product.id)
           .slice(0, 4)
-          .map(p => ({ ...p, id: p._id }))
-        
+          .map((p) => ({ ...p, id: p._id }))
+
         setRelatedProducts(filtered)
       } else {
         // If no products in same category, get random products
         const response = await fetch('/api/products?limit=4')
         const data = await response.json()
-        
+
         if (data.success) {
           const filtered = data.products
-            .filter(p => p._id !== product._id && p._id !== product.id)
+            .filter((p) => p._id !== product._id && p._id !== product.id)
             .slice(0, 4)
-            .map(p => ({ ...p, id: p._id }))
-          
+            .map((p) => ({ ...p, id: p._id }))
+
           setRelatedProducts(filtered)
         }
       }
@@ -61,12 +63,19 @@ export default function RelatedProducts({ product }) {
       <div className="bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Related Products</h2>
-            <p className="mt-2 text-lg text-gray-600">Loading related products...</p>
+            <h2 className="text-3xl font-bold text-gray-900">
+              Related Products
+            </h2>
+            <p className="mt-2 text-lg text-gray-600">
+              Loading related products...
+            </p>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[...Array(4)].map((_, index) => (
-              <div key={index} className="animate-pulse rounded-lg bg-gray-200 h-80"></div>
+              <div
+                key={index}
+                className="h-80 animate-pulse rounded-lg bg-gray-200"
+              ></div>
             ))}
           </div>
         </div>
@@ -83,9 +92,7 @@ export default function RelatedProducts({ product }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900">
-            Related Products
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900">Related Products</h2>
           <p className="mt-2 text-lg text-gray-600">
             You might also like these products
           </p>

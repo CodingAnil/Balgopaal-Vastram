@@ -8,11 +8,7 @@ export const products = [
     originalPrice: 1500,
     description:
       "Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.Beautiful peacock green silk vastra with intricate golden embroidery, perfect for Laddu Gopal's divine appearance.",
-    images: [
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-    ],
+    images: ['/hero/peckok.jpeg', '/hero/peckok.jpeg', '/hero/peckok.jpeg'],
     sizes: ['0', '1', '2', '3', '4', '5', '6'],
     colors: ['peacock-green'],
     features: [
@@ -60,10 +56,7 @@ export const products = [
     originalPrice: 750,
     description:
       'Beautiful golden bansuri flute, handcrafted with traditional methods, perfect for devotional music.',
-    images: [
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-    ],
+    images: ['/hero/peckok.jpeg', '/hero/peckok.jpeg'],
     sizes: ['2', '3', '4', '5', '6'],
     colors: ['gold'],
     features: [
@@ -87,10 +80,7 @@ export const products = [
     originalPrice: 1300,
     description:
       'Stunning red silk vastra with elaborate gold thread embroidery, creating a royal appearance for Laddu Gopal.',
-    images: [
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-    ],
+    images: ['/hero/peckok.jpeg', '/hero/peckok.jpeg'],
     sizes: ['0', '1', '2', '3', '4', '5', '6'],
     colors: ['red'],
     features: [
@@ -114,10 +104,7 @@ export const products = [
     originalPrice: 1100,
     description:
       'Unique mukut adorned with real peacock feathers, creating a divine and natural appearance.',
-    images: [
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-    ],
+    images: ['/hero/peckok.jpeg', '/hero/peckok.jpeg'],
     sizes: ['1', '2', '3', '4', '5', '6'],
     colors: ['peacock-green', 'blue'],
     features: [
@@ -141,10 +128,7 @@ export const products = [
     originalPrice: 1200,
     description:
       "Elegant blue silk vastra with silver thread work, representing the divine Krishna's favorite color.",
-    images: [
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-    ],
+    images: ['/hero/peckok.jpeg', '/hero/peckok.jpeg'],
     sizes: ['0', '1', '2', '3', '4', '5', '6'],
     colors: ['blue'],
     features: [
@@ -168,10 +152,7 @@ export const products = [
     originalPrice: 850,
     description:
       'Beautiful copper-finished bansuri with traditional craftsmanship and excellent sound quality.',
-    images: [
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-    ],
+    images: ['/hero/peckok.jpeg', '/hero/peckok.jpeg'],
     sizes: ['2', '3', '4', '5', '6'],
     colors: ['copper'],
     features: [
@@ -195,10 +176,7 @@ export const products = [
     originalPrice: 1050,
     description:
       'Bright yellow silk vastra with golden embroidery, perfect for festive occasions and celebrations.',
-    images: [
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-    ],
+    images: ['/hero/peckok.jpeg', '/hero/peckok.jpeg'],
     sizes: ['0', '1', '2', '3', '4', '5', '6'],
     colors: ['yellow'],
     features: [
@@ -246,10 +224,7 @@ export const products = [
     originalPrice: 1600,
     description:
       'Beautiful multi-color silk vastra with peacock green and copper accents, featuring traditional motifs.',
-    images: [
-      '/hero/peckok.jpeg',
-      '/hero/peckok.jpeg',
-    ],
+    images: ['/hero/peckok.jpeg', '/hero/peckok.jpeg'],
     sizes: ['0', '1', '2', '3', '4', '5', '6'],
     colors: ['peacock-green', 'copper'],
     features: [
@@ -334,23 +309,25 @@ export const filterProducts = (products, filters) => {
 export const getRelatedProducts = (currentProduct, limit = 4) => {
   // Get products from the same category, excluding the current product
   const relatedProducts = products
-    .filter(product => 
-      product.category === currentProduct.category && 
-      product.id !== currentProduct.id
+    .filter(
+      (product) =>
+        product.category === currentProduct.category &&
+        product.id !== currentProduct.id
     )
     .slice(0, limit)
-  
+
   // If we don't have enough products from the same category, fill with other products
   if (relatedProducts.length < limit) {
     const additionalProducts = products
-      .filter(product => 
-        product.id !== currentProduct.id && 
-        !relatedProducts.some(related => related.id === product.id)
+      .filter(
+        (product) =>
+          product.id !== currentProduct.id &&
+          !relatedProducts.some((related) => related.id === product.id)
       )
       .slice(0, limit - relatedProducts.length)
-    
+
     return [...relatedProducts, ...additionalProducts]
   }
-  
+
   return relatedProducts
 }

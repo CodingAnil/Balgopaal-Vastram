@@ -80,7 +80,7 @@ export const testimonials = [
     text: 'Outstanding quality and beautiful designs! The peacock feather mukut is a masterpiece. The customer service team was very helpful with size selection.',
     image: '/hero/peckok.jpeg',
   },
-  
+
   // International Customers (5)
   {
     id: 11,

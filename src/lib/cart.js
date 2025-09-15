@@ -45,7 +45,10 @@ export const addToCart = (
       name: product.name,
       slug: product.slug,
       price: product.price,
-      image: product.images && product.images.length > 0 ? product.images[0] : '/hero/peckok.jpeg',
+      image:
+        product.images && product.images.length > 0
+          ? product.images[0]
+          : '/hero/peckok.jpeg',
       size: selectedSize,
       color: selectedColor,
       quantity: quantity,

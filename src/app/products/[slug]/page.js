@@ -1,4 +1,3 @@
-
 import connectDB from '@/lib/db'
 import Product from '@/lib/models/Product'
 import ProductDetailsClient from './product-details-client'
@@ -6,17 +5,17 @@ import ProductDetailsClient from './product-details-client'
 async function getProduct(slug) {
   try {
     await connectDB()
-    
+
     // Get product from database only
     const dbProduct = await Product.findOne({ slug }).lean()
     if (dbProduct) {
       return {
         ...dbProduct,
         _id: dbProduct._id.toString(),
-        id: dbProduct._id.toString() // Add id for compatibility
+        id: dbProduct._id.toString(), // Add id for compatibility
       }
     }
-    
+
     return null
   } catch (error) {
     console.error('Error fetching product:', error)
@@ -28,7 +27,7 @@ export async function generateStaticParams() {
   try {
     await connectDB()
     const products = await Product.find({}, 'slug').lean()
-    
+
     return products.map((product) => ({
       slug: product.slug,
     }))
@@ -45,10 +44,10 @@ export async function generateMetadata({ params }) {
   if (!product) {
     return {
       title: 'Product Not Found',
-      description: 'The product you\'re looking for doesn\'t exist.',
+      description: "The product you're looking for doesn't exist.",
       openGraph: {
         title: 'Product Not Found',
-        description: 'The product you\'re looking for doesn\'t exist.',
+        description: "The product you're looking for doesn't exist.",
         images: ['/placeholder.jpg'],
       },
     }
@@ -60,7 +59,11 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: `${product.name} - Balgopaal Vastram`,
       description: product.description,
-      images: [product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg'],
+      images: [
+        product.images && product.images.length > 0
+          ? product.images[0]
+          : '/placeholder.jpg',
+      ],
     },
   }
 }

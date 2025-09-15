@@ -5,6 +5,7 @@ This document outlines the complete MongoDB integration implemented for the Balg
 ## 🎯 Overview
 
 The application has been extended with full MongoDB integration using Mongoose, providing:
+
 - Product management with admin interface
 - Order processing and tracking
 - User management
@@ -51,6 +52,7 @@ src/
 ## 🗄️ Database Schema
 
 ### Product Model
+
 ```javascript
 {
   name: String (required, max 100 chars)
@@ -71,6 +73,7 @@ src/
 ```
 
 ### User Model
+
 ```javascript
 {
   name: String (required, max 50 chars)
@@ -87,6 +90,7 @@ src/
 ```
 
 ### Order Model
+
 ```javascript
 {
   orderId: String (auto-generated, unique)
@@ -125,9 +129,11 @@ src/
 ### Products API
 
 #### GET `/api/products`
+
 Retrieve products with filtering, pagination, and search.
 
 **Query Parameters:**
+
 - `page` - Page number (default: 1)
 - `limit` - Items per page (default: 10)
 - `category` - Filter by category
@@ -138,6 +144,7 @@ Retrieve products with filtering, pagination, and search.
 - `inStock` - Filter by stock status (true/false)
 
 **Response:**
+
 ```javascript
 {
   success: true,
@@ -159,12 +166,15 @@ Retrieve products with filtering, pagination, and search.
 ```
 
 #### POST `/api/products/add`
+
 Add new product (Admin only).
 
 **Required Headers:**
+
 - `Content-Type: application/json`
 
 **Request Body:**
+
 ```javascript
 {
   name: "Product Name",
@@ -182,9 +192,11 @@ Add new product (Admin only).
 ### Orders API
 
 #### POST `/api/orders/create`
+
 Create new order.
 
 **Request Body:**
+
 ```javascript
 {
   userInfo: {
@@ -216,20 +228,25 @@ Create new order.
 ```
 
 #### GET `/api/orders/user/[email]`
+
 Get all orders for a user by email.
 
 **Query Parameters:**
+
 - `page` - Page number
 - `limit` - Items per page
 - `status` - Filter by order status
 
 #### GET `/api/orders/[id]`
-Get single order details by order ID or MongoDB _id.
+
+Get single order details by order ID or MongoDB \_id.
 
 #### PATCH `/api/orders/[id]`
+
 Update order status (for admin).
 
 **Request Body:**
+
 ```javascript
 {
   status: "SHIPPED",
@@ -243,10 +260,12 @@ Update order status (for admin).
 ## 🔐 Admin Features
 
 ### Admin Access
+
 - Access via About Us page → "Go to Admin" button
 - Protected API endpoints validate admin password
 
 ### Add Product Form
+
 - Comprehensive validation
 - Real-time feedback
 - Success/error notifications
@@ -255,6 +274,7 @@ Update order status (for admin).
 ## 🛒 Frontend Integration
 
 ### Product Listing (`/products`)
+
 - Real-time API integration
 - Dynamic filtering from database
 - Search functionality
@@ -263,12 +283,14 @@ Update order status (for admin).
 - Responsive design
 
 ### Checkout Process (`/checkout`)
+
 - Automatic order creation after payment
 - User creation if email doesn't exist
 - Both Razorpay and COD support
 - Order saved to database with all details
 
 ### Order Management (`/orders`)
+
 - Email-based order lookup
 - Order history with pagination
 - Detailed order view with tracking
@@ -278,7 +300,9 @@ Update order status (for admin).
 ## 🚀 Setup Instructions
 
 ### 1. Environment Variables
+
 Create `.env.local` file:
+
 ```env
 # Database
 MONGODB_URI=mongodb://localhost:27017/balgopaal-vastram
@@ -294,28 +318,33 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 npm install mongoose
 ```
 
 ### 3. Database Setup
+
 - MongoDB will automatically create collections on first use
 - Indexes are created automatically via Mongoose schema
 - No manual database setup required
 
 ### 4. Admin Access
+
 - Access via: About Us page → "Go to Admin" button
 - Can be changed in `/api/products/add/route.js`
 
 ## 📊 Features Implemented
 
 ### ✅ Database Integration
+
 - [x] MongoDB connection with connection pooling
 - [x] Mongoose schemas with validation
 - [x] Automatic indexing for performance
 - [x] Error handling and connection management
 
 ### ✅ Product Management
+
 - [x] Admin-protected product addition
 - [x] Product listing with filters and search
 - [x] Category, color, size filtering
@@ -324,6 +353,7 @@ npm install mongoose
 - [x] Stock management
 
 ### ✅ Order Processing
+
 - [x] Complete order creation workflow
 - [x] User auto-creation and management
 - [x] Payment integration (Razorpay + COD)
@@ -332,6 +362,7 @@ npm install mongoose
 - [x] Order history with pagination
 
 ### ✅ User Experience
+
 - [x] Responsive design across all pages
 - [x] Loading states and error handling
 - [x] Toast notifications for feedback
@@ -339,6 +370,7 @@ npm install mongoose
 - [x] Navigation integration
 
 ### ✅ API Security
+
 - [x] Input validation and sanitization
 - [x] Error handling without data leakage
 - [x] Admin authentication for protected routes
@@ -347,6 +379,7 @@ npm install mongoose
 ## 🧪 Testing Recommendations
 
 ### API Testing
+
 ```bash
 # Test product creation
 curl -X POST http://localhost:3000/api/products/add \
@@ -371,6 +404,7 @@ curl -X POST http://localhost:3000/api/orders/create \
 ```
 
 ### Manual Testing Checklist
+
 - [ ] Admin can add products via About Us page
 - [ ] Product listing loads with filters
 - [ ] Search functionality works
@@ -404,6 +438,7 @@ curl -X POST http://localhost:3000/api/orders/create \
    - Ensure user info is complete
 
 ### Development Tips
+
 - Use MongoDB Compass for database visualization
 - Check browser network tab for API calls
 - Monitor console for errors and warnings
@@ -412,6 +447,7 @@ curl -X POST http://localhost:3000/api/orders/create \
 ## 🚀 Deployment Considerations
 
 ### Production Setup
+
 1. Use MongoDB Atlas for cloud database
 2. Set proper environment variables
 3. Enable database indexing for performance
@@ -420,6 +456,7 @@ curl -X POST http://localhost:3000/api/orders/create \
 6. Set up backup and monitoring
 
 ### Performance Optimization
+
 - Implement Redis caching for frequent queries
 - Add database connection pooling
 - Optimize images with Next.js Image component

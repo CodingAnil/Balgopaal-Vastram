@@ -29,23 +29,27 @@ export default function ProductDetailsClient({ product }) {
       setSelectedColor(product.colors[0])
     }
     setIsFavorited(isFavorite(product.id || product._id))
-    
+
     // Listen for favorite changes across the app
     const handleFavoriteChange = (e) => {
-      if (e.detail && (e.detail.productId === product.id || e.detail.productId === product._id)) {
+      if (
+        e.detail &&
+        (e.detail.productId === product.id ||
+          e.detail.productId === product._id)
+      ) {
         setIsFavorited(isFavorite(product.id || product._id))
       }
     }
-    
+
     window.addEventListener('favoriteChanged', handleFavoriteChange)
-    
+
     return () => {
       window.removeEventListener('favoriteChanged', handleFavoriteChange)
     }
   }, [product])
 
   const handleAddToCart = async () => {
-    if(isAddingToCart) {
+    if (isAddingToCart) {
       router.push('/cart')
       return
     }
@@ -57,8 +61,8 @@ export default function ProductDetailsClient({ product }) {
     setIsAddingToCart(true)
     try {
       addToCart(product, selectedSize, selectedColor, quantity)
-        console.log('Added to cart successfully')
-      showToast('Added to cart','success')
+      console.log('Added to cart successfully')
+      showToast('Added to cart', 'success')
     } catch (error) {
       console.error('Error adding to cart:', error)
     } finally {
@@ -70,19 +74,21 @@ export default function ProductDetailsClient({ product }) {
     const productId = product.id || product._id
     const newFavorites = toggleFavorite(product)
     const wasAdded = !isFavorited
-    
-    if(wasAdded) {
-      showToast('Added to favorites','success')
+
+    if (wasAdded) {
+      showToast('Added to favorites', 'success')
     } else {
-      showToast('Removed from favorites','info')
+      showToast('Removed from favorites', 'info')
     }
-    
+
     setIsFavorited(wasAdded)
-    
+
     // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('favoriteChanged', {
-      detail: { productId, wasAdded }
-    }))
+    window.dispatchEvent(
+      new CustomEvent('favoriteChanged', {
+        detail: { productId, wasAdded },
+      })
+    )
   }
 
   const formatPrice = (price) => {
@@ -107,35 +113,36 @@ export default function ProductDetailsClient({ product }) {
     if (configColor) {
       return configColor
     }
-    
+
     // Fallback for colors not in config
     return {
       id: colorId,
-      name: colorId.charAt(0).toUpperCase() + colorId.slice(1).replace('-', ' '),
-      value: getColorValue(colorId)
+      name:
+        colorId.charAt(0).toUpperCase() + colorId.slice(1).replace('-', ' '),
+      value: getColorValue(colorId),
     }
   }
 
   const getColorValue = (colorId) => {
     // Default color mappings for common colors
     const colorMap = {
-      'red': '#dc2626',
-      'blue': '#2563eb',
-      'green': '#16a34a',
-      'yellow': '#eab308',
-      'orange': '#ea580c',
-      'purple': '#9333ea',
-      'pink': '#ec4899',
-      'black': '#000000',
-      'white': '#ffffff',
-      'gray': '#6b7280',
-      'gold': '#fbbf24',
-      'silver': '#9ca3af',
-      'brown': '#92400e',
-      'peacock': '#16a34a',
-      'copper': '#f2760b'
+      red: '#dc2626',
+      blue: '#2563eb',
+      green: '#16a34a',
+      yellow: '#eab308',
+      orange: '#ea580c',
+      purple: '#9333ea',
+      pink: '#ec4899',
+      black: '#000000',
+      white: '#ffffff',
+      gray: '#6b7280',
+      gold: '#fbbf24',
+      silver: '#9ca3af',
+      brown: '#92400e',
+      peacock: '#16a34a',
+      copper: '#f2760b',
     }
-    
+
     // Try to find the color or return a default
     const lowerColorId = colorId.toLowerCase()
     for (const [key, value] of Object.entries(colorMap)) {
@@ -143,7 +150,7 @@ export default function ProductDetailsClient({ product }) {
         return value
       }
     }
-    
+
     return '#6b7280' // Default gray
   }
 
@@ -156,7 +163,11 @@ export default function ProductDetailsClient({ product }) {
             {/* Main Image */}
             <div className="aspect-square overflow-hidden rounded-lg bg-white shadow-lg">
               <Image
-               src={product.images && product.images.length > 0 ? product.images[selectedImage] : '/placeholder.jpg'}
+                src={
+                  product.images && product.images.length > 0
+                    ? product.images[selectedImage]
+                    : '/placeholder.jpg'
+                }
                 alt={product.name || 'Product Image'}
                 width={600}
                 height={600}
@@ -306,19 +317,20 @@ export default function ProductDetailsClient({ product }) {
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
-                {product.sizes && product.sizes.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`rounded-lg border px-4 py-2 transition-all ${
-                      selectedSize === size
-                        ? 'border-peacock-500 bg-peacock-50 text-peacock-700'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
+                {product.sizes &&
+                  product.sizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`rounded-lg border px-4 py-2 transition-all ${
+                        selectedSize === size
+                          ? 'border-peacock-500 bg-peacock-50 text-peacock-700'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
               </div>
             </div>
 
@@ -328,33 +340,34 @@ export default function ProductDetailsClient({ product }) {
                 Color
               </h3>
               <div className="flex flex-wrap gap-2">
-                {product.colors && product.colors.map((colorId) => {
-                  const color = getColorInfo(colorId)
-                  return color ? (
-                    <button
-                      key={colorId}
-                      onClick={() => setSelectedColor(colorId)}
-                      className={`flex items-center space-x-2 rounded-lg border px-3 py-2 transition-all ${
-                        selectedColor === colorId
-                          ? 'border-peacock-500 bg-peacock-50'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                    >
-                      <div
-                        className="h-4 w-4 rounded-full border border-gray-300"
-                        style={{ backgroundColor: color.value }}
-                      />
-                      <span className="text-sm">{color.name}</span>
-                    </button>
-                  ) : null
-                })}
+                {product.colors &&
+                  product.colors.map((colorId) => {
+                    const color = getColorInfo(colorId)
+                    return color ? (
+                      <button
+                        key={colorId}
+                        onClick={() => setSelectedColor(colorId)}
+                        className={`flex items-center space-x-2 rounded-lg border px-3 py-2 transition-all ${
+                          selectedColor === colorId
+                            ? 'border-peacock-500 bg-peacock-50'
+                            : 'border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        <div
+                          className="h-4 w-4 rounded-full border border-gray-300"
+                          style={{ backgroundColor: color.value }}
+                        />
+                        <span className="text-sm">{color.name}</span>
+                      </button>
+                    ) : null
+                  })}
               </div>
             </div>
 
             {/* Quantity */}
             <div>
               <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                Quantity 
+                Quantity
               </h3>
               <div className="flex items-center space-x-3">
                 <button
@@ -373,8 +386,8 @@ export default function ProductDetailsClient({ product }) {
               </div>
             </div>
 
-             {/* Stock Status */}
-             <div className="rounded-lg bg-gray-50 p-4">
+            {/* Stock Status */}
+            <div className="rounded-lg bg-gray-50 p-4">
               <div className="flex items-center">
                 <div
                   className={`mr-2 h-3 w-3 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}
@@ -389,11 +402,7 @@ export default function ProductDetailsClient({ product }) {
             <div className="space-y-3">
               <Button
                 onClick={handleAddToCart}
-                disabled={
-                  !product.inStock ||
-                  !selectedSize ||
-                  !selectedColor
-                }
+                disabled={!product.inStock || !selectedSize || !selectedColor}
                 className="w-full"
                 size="lg"
               >
@@ -432,8 +441,6 @@ export default function ProductDetailsClient({ product }) {
                 </Button>
               </div>
             </div>
-
-          
           </div>
         </div>
       </div>
@@ -449,4 +456,3 @@ export default function ProductDetailsClient({ product }) {
     </div>
   )
 }
-

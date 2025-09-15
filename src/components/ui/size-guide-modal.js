@@ -8,8 +8,8 @@ export default function SizeGuideModal({ isModalOpen, onClose }) {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleClose = () => {
-    if(onClose) {
-    onClose()
+    if (onClose) {
+      onClose()
     }
     setIsOpen(false)
   }
@@ -17,7 +17,6 @@ export default function SizeGuideModal({ isModalOpen, onClose }) {
   const handleOpen = () => {
     setIsOpen(true)
   }
-
 
   useEffect(() => {
     setIsOpen(isModalOpen)
@@ -105,11 +104,11 @@ export default function SizeGuideModal({ isModalOpen, onClose }) {
                   {/* Idol Size Section */}
                   <div className="space-y-4">
                     <div className="text-center">
-                      <div className="mx-auto mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 overflow-hidden">
-                        <img 
-                          src="/hero/gopalSize.png" 
-                          alt="Laddu Gopal Idol" 
-                          className="w-full h-full object-cover rounded-full"
+                      <div className="mx-auto mb-4 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600">
+                        <img
+                          src="/hero/gopalSize.png"
+                          alt="Laddu Gopal Idol"
+                          className="h-full w-full rounded-full object-cover"
                           onError={(e) => {
                             e.target.src = '/hero/peckok.jpeg'
                           }}
@@ -148,11 +147,11 @@ export default function SizeGuideModal({ isModalOpen, onClose }) {
                   {/* Dress Size Section */}
                   <div className="space-y-4">
                     <div className="text-center">
-                      <div className="mx-auto mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-peacock-500 to-copper-500 overflow-hidden">
-                        <img 
-                          src="/hero/gopalSizeDress.jpeg" 
-                          alt="Laddu Gopal Dress" 
-                          className="w-full h-full object-cover rounded-full"
+                      <div className="mx-auto mb-4 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-peacock-500 to-copper-500">
+                        <img
+                          src="/hero/gopalSizeDress.jpeg"
+                          alt="Laddu Gopal Dress"
+                          className="h-full w-full rounded-full object-cover"
                           onError={(e) => {
                             e.target.src = '/hero/peckok.jpeg'
                           }}
@@ -196,7 +195,6 @@ export default function SizeGuideModal({ isModalOpen, onClose }) {
                   </h4>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="text-center">
-                  
                       <p className="text-sm text-gray-600">
                         Idol Height: 2.75 inch
                       </p>
@@ -205,7 +203,6 @@ export default function SizeGuideModal({ isModalOpen, onClose }) {
                       </p>
                     </div>
                     <div className="text-center">
-                  
                       <p className="text-sm text-gray-600">
                         Dress Diameter: 6.0 inch
                       </p>

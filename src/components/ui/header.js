@@ -39,7 +39,7 @@ export default function Header() {
 
     window.addEventListener('storage', updateCounts)
     window.addEventListener('favoriteChanged', handleFavoriteChange)
-    
+
     // Check scroll position
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
@@ -64,7 +64,6 @@ export default function Header() {
     { name: 'FAQ', href: '/faq' },
   ]
 
-
   return (
     <header
       className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
@@ -77,7 +76,9 @@ export default function Header() {
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center space-x-4">
               <span>🆓 Free Shipping on Orders Above ₹999</span>
-              <span className="hidden sm:inline">📞 {siteConfig.contact.phone}</span>
+              <span className="hidden sm:inline">
+                📞 {siteConfig.contact.phone}
+              </span>
             </div>
             <div className="flex items-center space-x-4">
               <span>🇮🇳 Made in India (Haryana)</span>
@@ -125,7 +126,7 @@ export default function Header() {
             {/* Switch To Admin Button */}
             <button
               onClick={() => router.push('/admin')}
-              className="hidden sm:flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-peacock-600 hover:bg-gray-50 rounded-md"
+              className="hidden items-center space-x-1 rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50 hover:text-peacock-600 sm:flex"
             >
               <svg
                 className="h-4 w-4"
@@ -148,7 +149,7 @@ export default function Header() {
               </svg>
               <span>Switch To Admin</span>
             </button>
-      
+
             {/* Favorites */}
             <Link
               href="/favorites"
@@ -199,9 +200,9 @@ export default function Header() {
               )}
             </Link>
 
-               {/* Account */}
+            {/* Account */}
             <span className="p-2 text-gray-700 transition-colors duration-200 hover:text-peacock-600">
-              {user? user?.name : ''}
+              {user ? user?.name : ''}
             </span>
 
             {/* Mobile menu button */}

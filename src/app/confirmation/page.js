@@ -68,7 +68,6 @@ export default function ConfirmationPage() {
   }
 
   const handleAdminNotification = () => {
-
     // Create WhatsApp message
     const whatsappMessage = createWhatsAppMessage(orderData)
 
@@ -115,7 +114,8 @@ export default function ConfirmationPage() {
             Order Placed Successfully!
           </h1>
           <p className="mb-2 text-lg text-gray-600">
-            Thank you for your order. Please send the purchase details to Admin, so that we start your order shipping.
+            Thank you for your order. Please send the purchase details to Admin,
+            so that we start your order shipping.
           </p>
           <p className="text-gray-600">
             Order ID:{' '}
@@ -123,8 +123,14 @@ export default function ConfirmationPage() {
               {orderData.orderId}
             </span>
           </p>
-          <p className="text-gray-600"><span className='font-semibold text-red-500'>NOTE :</span>Its an required action please send the message to admin</p>
-          <button onClick={handleAdminNotification} className="bg-peacock-600 text-white px-4 py-2 rounded-md">
+          <p className="text-gray-600">
+            <span className="font-semibold text-red-500">NOTE :</span>Its an
+            required action please send the message to admin
+          </p>
+          <button
+            onClick={handleAdminNotification}
+            className="rounded-md bg-peacock-600 px-4 py-2 text-white"
+          >
             Send Notification to Admin
           </button>
         </div>
@@ -327,7 +333,9 @@ export default function ConfirmationPage() {
               </div>
               <div>
                 <p className="font-medium text-gray-900">Phone</p>
-                <p className="text-sm text-gray-600">{siteConfig.contact.phone}</p>
+                <p className="text-sm text-gray-600">
+                  {siteConfig.contact.phone}
+                </p>
               </div>
             </div>
 

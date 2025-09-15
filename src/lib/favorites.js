@@ -34,7 +34,10 @@ export const addToFavorites = (product) => {
       slug: product.slug,
       price: product.price,
       originalPrice: product.originalPrice,
-      image: product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg',
+      image:
+        product.images && product.images.length > 0
+          ? product.images[0]
+          : '/placeholder.jpg',
       category: product.category,
       colors: product.colors || [],
       sizes: product.sizes || [],
@@ -83,13 +86,15 @@ export const searchFavorites = (query) => {
   }
 
   const searchTerm = query.toLowerCase().trim()
-  return favorites.filter(product =>
-    product.name.toLowerCase().includes(searchTerm) ||
-    product.description.toLowerCase().includes(searchTerm) ||
-    product.category.toLowerCase().includes(searchTerm) ||
-    (product.colors && product.colors.some(color => 
-      color.toLowerCase().includes(searchTerm)
-    ))
+  return favorites.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm) ||
+      product.description.toLowerCase().includes(searchTerm) ||
+      product.category.toLowerCase().includes(searchTerm) ||
+      (product.colors &&
+        product.colors.some((color) =>
+          color.toLowerCase().includes(searchTerm)
+        ))
   )
 }
 

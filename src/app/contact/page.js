@@ -30,7 +30,12 @@ export default function ContactPage() {
 
     try {
       // Validate required fields
-      if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.message.trim()) {
+      if (
+        !formData.name.trim() ||
+        !formData.email.trim() ||
+        !formData.phone.trim() ||
+        !formData.message.trim()
+      ) {
         setSubmitStatus('error')
         setIsSubmitting(false)
         return
@@ -46,16 +51,16 @@ Message: ${formData.message}`
 
       // Encode the message for WhatsApp URL
       const encodedMessage = encodeURIComponent(formattedMessage)
-      
+
       // WhatsApp phone number from config
       const whatsappNumber = siteConfig.contact.phone.replace(/\D/g, '') // Remove non-digits
-      
+
       // Create WhatsApp URL
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
-      
+
       // Open WhatsApp in a new tab/window
       window.open(whatsappUrl, '_blank')
-      
+
       // Reset form after successful redirect
       setFormData({
         name: '',
@@ -64,7 +69,7 @@ Message: ${formData.message}`
         subject: '',
         message: '',
       })
-      
+
       setSubmitStatus('success')
     } catch (error) {
       setSubmitStatus('error')
@@ -238,7 +243,8 @@ Message: ${formData.message}`
               Send us a Message
             </h2>
             <p className="mb-6 text-sm text-gray-600">
-              Fill out the form below and we'll redirect you to WhatsApp to send your message directly to us.
+              Fill out the form below and we'll redirect you to WhatsApp to send
+              your message directly to us.
             </p>
 
             {submitStatus === 'success' && (
@@ -277,7 +283,8 @@ Message: ${formData.message}`
                     />
                   </svg>
                   <span className="text-red-700">
-                    Please fill in all required fields (Name, Email, Phone, and Message).
+                    Please fill in all required fields (Name, Email, Phone, and
+                    Message).
                   </span>
                 </div>
               </div>

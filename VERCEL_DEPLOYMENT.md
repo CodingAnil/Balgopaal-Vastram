@@ -15,11 +15,13 @@
 In your Vercel project dashboard, go to **Settings → Environment Variables** and add these:
 
 #### **Database Configuration**
+
 ```
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/balgopaal-vastram?retryWrites=true&w=majority
 ```
 
 #### **SendGrid Email Configuration**
+
 ```
 SENDGRID_API_KEY=SG.your_actual_sendgrid_api_key_here
 FROM_EMAIL=noreply@yourdomain.com
@@ -27,6 +29,7 @@ ADMIN_EMAIL=admin@yourdomain.com
 ```
 
 #### **Razorpay Payment Configuration**
+
 ```
 RAZORPAY_KEY_ID=rzp_live_your_key_id_here
 RAZORPAY_KEY_SECRET=your_secret_key_here
@@ -34,6 +37,7 @@ NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_live_your_key_id_here
 ```
 
 #### **Cloudinary Image Upload Configuration**
+
 ```
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
@@ -41,13 +45,14 @@ CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 #### **Admin Authentication**
+
 ```
 ADMIN_PASSWORD=your_secure_admin_password_here
 ```
 
 ### 3. Deploy
 
-1. Click "Deploy" 
+1. Click "Deploy"
 2. Wait for the build to complete
 3. Your site will be live at `https://your-project-name.vercel.app`
 
@@ -126,6 +131,7 @@ ADMIN_PASSWORD=your_secure_admin_password_here
 ## 🎯 Vercel Project Settings
 
 ### Build & Development Settings
+
 ```
 Build Command: npm run build
 Output Directory: .next
@@ -134,11 +140,13 @@ Development Command: npm run dev
 ```
 
 ### Node.js Version
+
 ```
 Node.js Version: 18.x
 ```
 
 ### Environment Variables
+
 - Set all environment variables in Vercel dashboard
 - Use different values for Preview and Production environments
 - Keep sensitive keys secure
@@ -146,17 +154,20 @@ Node.js Version: 18.x
 ## 🛡️ Security Best Practices
 
 ### Environment Variables
+
 - ✅ Never commit `.env.local` to Git
 - ✅ Use different keys for development and production
 - ✅ Rotate API keys regularly
 - ✅ Use strong admin passwords
 
 ### Database Security
+
 - ✅ Use MongoDB Atlas with authentication
 - ✅ Restrict IP access when possible
 - ✅ Use read/write permissions only
 
 ### Payment Security
+
 - ✅ Use Razorpay's test mode during development
 - ✅ Implement proper webhook verification
 - ✅ Log all payment transactions
@@ -164,11 +175,13 @@ Node.js Version: 18.x
 ## 🔄 Deployment Process
 
 ### Automatic Deployments
+
 - Every push to `main` branch triggers deployment
 - Preview deployments for pull requests
 - Branch deployments for feature branches
 
 ### Manual Deployments
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -183,12 +196,14 @@ vercel --prod
 ## 📊 Performance Optimization
 
 ### Next.js Configuration
+
 - ✅ Image optimization enabled
 - ✅ API routes optimized
 - ✅ Static generation where possible
 - ✅ ISR for dynamic content
 
 ### Vercel Features
+
 - ✅ Edge Functions for global performance
 - ✅ CDN for static assets
 - ✅ Automatic HTTPS
@@ -199,16 +214,19 @@ vercel --prod
 ### Common Issues
 
 **Build Failures**:
+
 - Check all environment variables are set
 - Verify MongoDB connection string
 - Ensure all dependencies are listed in package.json
 
 **Runtime Errors**:
+
 - Check Vercel function logs
 - Verify API endpoints are working
 - Test database connectivity
 
 **Payment Issues**:
+
 - Verify Razorpay keys are correct
 - Check webhook URLs
 - Test with Razorpay test cards
@@ -216,11 +234,13 @@ vercel --prod
 ### Debugging
 
 **Vercel Logs**:
+
 ```bash
 vercel logs --follow
 ```
 
 **Local Testing**:
+
 ```bash
 vercel dev
 ```
@@ -228,11 +248,13 @@ vercel dev
 ## 📈 Monitoring
 
 ### Vercel Analytics
+
 - Enable Vercel Analytics for performance monitoring
 - Monitor Core Web Vitals
 - Track user interactions
 
 ### Error Tracking
+
 - Integrate Sentry for error tracking
 - Monitor API response times
 - Set up alerts for critical errors

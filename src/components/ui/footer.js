@@ -43,8 +43,8 @@ export default function Footer() {
             </div>
             <p className="mb-4 text-sm text-gray-300">
               Handcrafted devotional wear for Laddu Gopal, made with love in
-              Haryana. We specialize in beautiful vastra, mukut, and bansuri
-              for your divine deity.
+              Haryana. We specialize in beautiful vastra, mukut, and bansuri for
+              your divine deity.
             </p>
             <div className="flex space-x-4">
               <a

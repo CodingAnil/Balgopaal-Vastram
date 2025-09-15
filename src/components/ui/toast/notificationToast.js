@@ -1,4 +1,4 @@
-import toast from 'react-hot-toast';
+import toast from 'react-hot-toast'
 
 // Custom toast component with close button and icon
 const ToastWithClose = ({ message, type = 'default' }) => {
@@ -10,54 +10,54 @@ const ToastWithClose = ({ message, type = 'default' }) => {
           color: '#065f46',
           border: '2px solid #059669',
           boxShadow: '0 8px 32px rgba(5, 150, 105, 0.2)',
-        };
+        }
       case 'error':
         return {
           background: 'rgba(239, 68, 68, 0.1)',
           color: '#991b1b',
           border: '2px solid #dc2626',
           boxShadow: '0 8px 32px rgba(220, 38, 38, 0.2)',
-        };
+        }
       case 'warning':
         return {
           background: 'rgba(245, 158, 11, 0.1)',
           color: '#92400e',
           border: '2px solid #d97706',
           boxShadow: '0 8px 32px rgba(217, 119, 6, 0.2)',
-        };
+        }
       case 'info':
         return {
           background: 'rgba(59, 130, 246, 0.1)',
           color: '#1e40af',
           border: '2px solid #2563eb',
           boxShadow: '0 8px 32px rgba(37, 99, 235, 0.2)',
-        };
+        }
       default:
         return {
           background: 'rgba(107, 114, 128, 0.1)',
           color: '#374151',
           border: '2px solid #6b7280',
           boxShadow: '0 8px 32px rgba(107, 114, 128, 0.2)',
-        };
+        }
     }
-  };
+  }
 
   const getIcon = () => {
     switch (type) {
       case 'success':
-        return '✅';
+        return '✅'
       case 'error':
-        return '❌';
+        return '❌'
       case 'warning':
-        return '⚠️';
+        return '⚠️'
       case 'info':
-        return 'ℹ️';
+        return 'ℹ️'
       default:
-        return 'ℹ️';
+        return 'ℹ️'
     }
-  };
+  }
 
-  const styles = getToastStyles();
+  const styles = getToastStyles()
 
   return (
     <div
@@ -104,81 +104,69 @@ const ToastWithClose = ({ message, type = 'default' }) => {
           borderRadius: '50%',
         }}
         onMouseEnter={(e) => {
-          e.target.style.opacity = '1';
-          e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+          e.target.style.opacity = '1'
+          e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'
         }}
         onMouseLeave={(e) => {
-          e.target.style.opacity = '0.7';
-          e.target.style.backgroundColor = 'transparent';
+          e.target.style.opacity = '0.7'
+          e.target.style.backgroundColor = 'transparent'
         }}
       >
         ×
       </button>
     </div>
-  );
-};
+  )
+}
 
 // Toast notification functions with glassmorphism design and close buttons
 export const showSuccessToast = (message) => {
-  const toastId = message;
-  return toast.custom(
-    <ToastWithClose message={message} type="success" />,
-    {
-      id: toastId,
-      duration: 4000,
-      position: 'top-right',
-    }
-  );
-};
+  const toastId = message
+  return toast.custom(<ToastWithClose message={message} type="success" />, {
+    id: toastId,
+    duration: 4000,
+    position: 'top-right',
+  })
+}
 
 export const showErrorToast = (message) => {
-  const toastId = message;
-  return toast.custom(
-    <ToastWithClose message={message} type="error" />,
-    {
-      id: toastId,
-      duration: 5000,
-      position: 'top-right',
-    }
-  );
-};
+  const toastId = message
+  return toast.custom(<ToastWithClose message={message} type="error" />, {
+    id: toastId,
+    duration: 5000,
+    position: 'top-right',
+  })
+}
 
 export const showWarningToast = (message) => {
-  const toastId = message;
-  return toast.custom(
-    <ToastWithClose message={message} type="warning" />,
-    {
-      id: toastId,
-      duration: 4000,
-      position: 'top-right',
-    }
-  );
-};
+  const toastId = message
+  return toast.custom(<ToastWithClose message={message} type="warning" />, {
+    id: toastId,
+    duration: 4000,
+    position: 'top-right',
+  })
+}
 
 export const showInfoToast = (message) => {
-  const toastId = message;
-  return toast.custom(
-    <ToastWithClose message={message} type="info" />,
-    {
-      id: toastId,
-      duration: 4000,
-      position: 'top-right',
-    }
-  );
-};
+  const toastId = message
+  return toast.custom(<ToastWithClose message={message} type="info" />, {
+    id: toastId,
+    duration: 4000,
+    position: 'top-right',
+  })
+}
 
 // Legacy function for backward compatibility
 export const showToast = (message, type) => {
   switch (type) {
     case 'success':
-      return showSuccessToast(message);
+      return showSuccessToast(message)
     case 'error':
-      return showErrorToast(message);
+      return showErrorToast(message)
     case 'warning':
-      return showWarningToast(message);
+      return showWarningToast(message)
     case 'info':
-      return showInfoToast(message);
+      return showInfoToast(message)
     default:
-      return showInfoToast(message);
+      return showInfoToast(message)
   }
-};
+}
