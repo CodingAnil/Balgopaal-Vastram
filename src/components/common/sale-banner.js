@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function SaleBanner() {
   return (
-    <section className="bg-gradient-to-r from-peacock-500 via-peacock-600 to-copper-600 py-16">
+    <section className="gradient-peacock-copper-special py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center text-white">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">Special Offer</h2>

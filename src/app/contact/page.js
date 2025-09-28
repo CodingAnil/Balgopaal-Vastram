@@ -81,7 +81,7 @@ Message: ${formData.message}`
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-peacock-500 via-peacock-600 to-copper-600 py-16 text-white">
+      <section className="gradient-peacock-copper-special py-16 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="mb-6 text-4xl font-bold md:text-5xl">Contact Us</h1>

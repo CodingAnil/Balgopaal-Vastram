@@ -43,8 +43,14 @@
     @apply bg-gradient-to-r from-copper-500 to-copper-700;
   }
 
-  .gradient-peacock-copper {
+  /* .gradient-peacock-copper {
     @apply bg-gradient-to-r from-peacock-500 via-peacock-600 to-copper-600;
+  } */
+  .gradient-peacock-copper {
+    @apply bg-copper-800;
+  }
+  .gradient-peacock-copper-special {
+    @apply bg-peacock-600;
   }
 }
 
