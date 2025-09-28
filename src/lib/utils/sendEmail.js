@@ -227,8 +227,8 @@ function generateUserEmailHTML(orderData) {
         <div class="footer">
           <div class="contact-info">
             <h4>📞 Contact Us</h4>
-            <p>Email: support@balgopaalvastram.com</p>
-            <p>Phone: +91 82952 73371</p>
+            <p>Email: balgopaal111@gmail.com</p>
+            <p>Phone: +91 9253430371</p>
             <p>Address: Mathura, Uttar Pradesh, India</p>
           </div>
           <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
@@ -469,8 +469,8 @@ function generateUserEmailText(orderData) {
   text += `Your order will be delivered in a few days. Thank you for shopping with Balgopaal Vastram!\n\n`
 
   text += `CONTACT US:\n`
-  text += `Email: support@balgopaalvastram.com\n`
-  text += `Phone: +91 82952 73371\n`
+  text += `Email: balgopaal111@gmail.com\n`
+  text += `Phone: +91 9253430371\n`
   text += `Address: Mathura, Uttar Pradesh, India\n\n`
 
   text += `This is an automated email. Please do not reply to this email.`

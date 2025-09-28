@@ -165,4 +165,4 @@ This project is licensed under the MIT License.
 
 ## Support
 
-For support, email info@balgopaal-vastram.com or call +91 82952 73371.
+For support, email balgopaal111@gmail.com or call +91 9253430371.

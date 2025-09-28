@@ -357,9 +357,7 @@ export default function ConfirmationPage() {
               </div>
               <div>
                 <p className="font-medium text-gray-900">Email</p>
-                <p className="text-sm text-gray-600">
-                  info@balgopaal-vastram.com
-                </p>
+                <p className="text-sm text-gray-600">balgopaal111@gmail.com</p>
               </div>
             </div>
           </div>

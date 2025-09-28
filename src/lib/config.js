@@ -8,11 +8,11 @@ export const siteConfig = {
     twitter: 'https://twitter.com/balgopaalvastram',
     facebook: 'https://facebook.com/balgopaalvastram',
     instagram: 'https://instagram.com/balgopaalvastram',
-    whatsapp: 'https://wa.me/918295273371',
+    whatsapp: 'https://wa.me/9253430371',
   },
   contact: {
-    email: 'info@balgopaal-vastram.com',
-    phone: '+91 82952 73371',
+    email: 'balgopaal111@gmail.com',
+    phone: '+91 9253430371',
     address: 'Fatehabad, Haryana, India',
   },
   categories: [
@@ -52,6 +52,6 @@ export const siteConfig = {
   },
   payment: {
     upi: 'balgopaal-vastram@paytm',
-    whatsapp: '+91 82952 73371',
+    whatsapp: '+91 9253430371',
   },
 }

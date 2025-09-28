@@ -307,10 +307,10 @@ export default function AdminPage() {
                 placeholder="Admin password"
               />
               <div
-                className="cursor-pointer py-2 text-sm text-gray-600"
+                className="cursor-pointer py-2 text-center text-sm text-green-600"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? 'hide password' : 'show password'}
+                {showPassword ? 'Hide Password' : 'Show Password'}
               </div>
             </div>
             <div>
@@ -339,12 +339,12 @@ export default function AdminPage() {
               <p className="text-sm text-gray-600">Manage your store</p>
             </div>
             <div className="flex items-center space-x-4">
-              <button
+              {/* <button
                 onClick={() => router.push('/admin/orders')}
                 className="rounded-md border border-transparent bg-peacock-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-peacock-700 focus:outline-none focus:ring-2 focus:ring-peacock-500 focus:ring-offset-2"
               >
                 View Orders
-              </button>
+              </button> */}
               <button
                 onClick={handleLogout}
                 className="rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
